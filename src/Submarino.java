@@ -1,10 +1,9 @@
 
-public class Submarino implements PodeAtirar {
+public class Submarino {
 	private int vidas;
 	private int mergulhadoresSalvos;
 	private int levelO2;
 	//private boolean mergulhado=false;
-	private Tiro tiro;
 	
 	public void salvarMergulhador() {
 		
@@ -25,5 +24,6 @@ public class Submarino implements PodeAtirar {
 	public void desembarca() {
 		
 	}
+	
 	
 }
