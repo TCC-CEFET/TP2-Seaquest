@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Rectangle ;
 
 public class Tiro {
 	protected Texture imagem;
-	protected Sound som;
 	protected Rectangle retangulo;
 	
 	public Tiro(String caminhoImagem, String caminhoSom, int x, int y, int largura, int altura) {
