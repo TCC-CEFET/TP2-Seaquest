@@ -1,8 +1,10 @@
+import com.badlogic.gdx.math.Rectangle;
 
 public class Submarino {
-	private int vidas;
-	private int mergulhadoresSalvos;
-	private int levelO2;
+	private Rectangle retangulo ;
+	private int vidas ;
+	private int mergulhadoresSalvos ;
+	private int levelO2 ;
 	//private boolean mergulhado=false;
 	
 	public void salvarMergulhador() {
