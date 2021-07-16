@@ -7,9 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 enum Direcao {ESQUERDA, DIREITA} ;
 
 public class Submarino {
-	static private String caminhoImagem="sprites\\background.png";
+	static private String caminhoImagem="sprites\\submarino_spritesheet.png";
+	static int largura=96, altura=36 ;
 	static int colunas=3, linhas=2 ;
-	static int larguraReal=96*3, alturaReal=72*3 ;
+	static int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
 	private Rectangle retangulo ;
 	private int vidas ;
 	private int mergulhadoresSalvos ;
@@ -25,9 +26,7 @@ public class Submarino {
 	
 	
 	public Submarino() {
-		retangulo = new Rectangle() ;
-		retangulo.x = 0 ;
-		retangulo.y = 0 ;
+		retangulo = new Rectangle((PropriedadesTela.getLargura()/2)-largura, PropriedadesTela.getAltura()-altura*3, largura, altura) ;
 		direcao = Direcao.DIREITA ;
 		this.montaAnimacao() ;
 	}
@@ -53,25 +52,27 @@ public class Submarino {
 	}
 	
 	public void montaAnimacao() {
+		float tempoEntreFrame = 0.057f ;
+		
 		Texture imagem = new Texture(caminhoImagem) ;
 		
-		TextureRegion[][] matrizFrames = TextureRegion.split(imagem, larguraReal/3, alturaReal/3) ;
+		TextureRegion[][] matrizFrames = TextureRegion.split(imagem, larguraRealSheet/colunas, alturaRealSheet/linhas) ;
 
 		framesDireita = new TextureRegion[colunas+1] ;
 		int i ;
-		for (i = 0; i < colunas; i++) {
+		for (i=0; i < colunas; i++) {
 			framesDireita[i] = matrizFrames[0][i];
 		}
 		framesDireita[i] = matrizFrames[0][i] ;
 		
 		framesEsquerda = new TextureRegion[colunas+1];
-		for (i = 0; i < colunas; i++) {
+		for (i=0; i < colunas; i++) {
 			framesEsquerda[i] = matrizFrames[1][i];
 		}
 		framesEsquerda[i] = matrizFrames[1][i] ;
 		
-		animacaoDireita = new Animation(0.025f, framesDireita) ;
-		animacaoEsquerda = new Animation(0.025f, framesEsquerda) ;
+		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
+		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
 	}
 	
 	public void anima(SpriteBatch batch, float stateTime) {

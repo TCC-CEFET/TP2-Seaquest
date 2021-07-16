@@ -24,7 +24,7 @@ public class Jogo extends ApplicationAdapter {
 		
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		camera.setToOrtho(false, PropriedadesTela.getLargura(), PropriedadesTela.getAltura());
 		fundo = new Background("sprites\\background.png");
 		
 		submarino = new Submarino() ;
@@ -38,7 +38,7 @@ public class Jogo extends ApplicationAdapter {
 		
 		stateTime += Gdx.graphics.getDeltaTime();
 		
-		submarino.anima(batch, stateTime) ;
+//		submarino.anima(batch, stateTime) ;
 		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		

@@ -6,6 +6,6 @@ public class Seaquest {
 	public static void main (String[] args) {
 	      System.setProperty("org.lwjgl.opengl.Display.allowSoftwareOpenGL", "true");
 
-        new LwjglApplication(new Jogo(), "Seaquest", 800, 480, false);
+        new LwjglApplication(new Jogo(), "Seaquest", PropriedadesTela.getLargura(), PropriedadesTela.getAltura(), false);
 	}
 }
