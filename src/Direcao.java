@@ -1,0 +1,1 @@
+enum Direcao {ESQUERDA, DIREITA} ;
