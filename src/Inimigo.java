@@ -1,4 +1,5 @@
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -7,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Inimigo {
 	static private int pontos=20;
-	static private float velocidade;
+	static private float velocidade=125 ; // px por s
 	
 	protected String caminhoImagem ;
 	protected int largura, altura ;
@@ -16,7 +17,7 @@ public class Inimigo {
 	protected float tempoEntreFrame ;
 	
 	protected Rectangle retangulo ;
-	protected Direcao direcao=Direcao.ESQUERDA ;
+	protected Direcao direcao=Direcao.DIREITA ;
 	
 	protected TextureRegion[] framesDireita ;
 	protected Animation animacaoDireita ;
@@ -65,5 +66,17 @@ public class Inimigo {
 		else frameAtual = animacaoEsquerda.getKeyFrame(stateTime, true);
 				
 		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
+	}
+	
+	public void movimenta() {
+		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+		else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
+	}
+	
+	public boolean paraRemover() {
+		if (retangulo.x < 0-largura) return true ;
+		if (retangulo.x > PropriedadesTela.getLargura()) return true ;
+		
+		return false ;
 	}
 }

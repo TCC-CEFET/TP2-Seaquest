@@ -7,6 +7,6 @@ public class SubmarinoInimigo extends Inimigo {
 	static private int colunas=3, linhas=2 ;
 	
 	public SubmarinoInimigo(int x, int y) {
-		super(x, y, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
+		super(x, y-(altura/2), caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
 	}
 }

@@ -1,4 +1,5 @@
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -7,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Mergulhador {
 	static private int pontos=50;
-	static private float velocidade;
+	static private float velocidade=125;
 	
 	static private String caminhoImagem="sprites\\mergulhador_spritesheet.png";
 	static private int largura=52, altura=56 ;
@@ -23,7 +24,7 @@ public class Mergulhador {
 	private Direcao direcao ;
 	
 	public Mergulhador(int x, int y) {
-		retangulo = new Rectangle(x, y, largura, altura) ;
+		retangulo = new Rectangle(x, y-(altura/2), largura, altura) ;
 		direcao = Direcao.DIREITA ;
 	}
 	
@@ -58,5 +59,17 @@ public class Mergulhador {
 		else frameAtual = animacaoEsquerda.getKeyFrame(stateTime, true);
 				
 		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
+	}
+	
+	public void movimenta() {
+		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+		else retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+	}
+	
+	public boolean paraRemover() {
+		if (retangulo.x < 0-largura) return true ;
+		if (retangulo.x > PropriedadesTela.getLargura()) return true ;
+		
+		return false ;
 	}
 }

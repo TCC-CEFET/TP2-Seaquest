@@ -1,3 +1,5 @@
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,6 +30,25 @@ public class Submarino {
 		retangulo = new Rectangle((PropriedadesTela.getLargura()/2)-largura, Ondas.getPosY(), largura, altura) ;
 		direcao = Direcao.DIREITA ;
 		this.montaAnimacao() ;
+	}
+	
+	public void movimenta() {
+		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+			direcao = Direcao.ESQUERDA ;
+			retangulo.x -= 200 * Gdx.graphics.getDeltaTime();
+		}
+	    if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+	    	direcao = Direcao.DIREITA ;
+	    	retangulo.x += 200 * Gdx.graphics.getDeltaTime();
+	    }
+	    if(Gdx.input.isKeyPressed(Keys.DOWN)) retangulo.y -= 200 * Gdx.graphics.getDeltaTime();
+	    if(Gdx.input.isKeyPressed(Keys.UP)) retangulo.y += 200 * Gdx.graphics.getDeltaTime();
+	    
+	    if(retangulo.x < 0) retangulo.x = 0;
+	    else if(retangulo.x > PropriedadesTela.getLargura()-largura) retangulo.x = PropriedadesTela.getLargura()-largura;
+	    
+	    if(retangulo.y < PropriedadesTela.getLimiteInferior()) retangulo.y = PropriedadesTela.getLimiteInferior();
+	    else if(retangulo.y > Ondas.getPosY()) retangulo.y = Ondas.getPosY();
 	}
 	
 	public void salvarMergulhador() {
