@@ -38,15 +38,15 @@ public class Mergulhador {
 		framesDireita = new TextureRegion[colunas+1] ;
 		int i ;
 		for (i=0; i < colunas; i++) {
-			framesDireita[i] = matrizFrames[1][i];
+			framesDireita[i] = matrizFrames[0][i];
 		}
-		framesDireita[i] = matrizFrames[1][1] ;
+		framesDireita[i] = matrizFrames[0][1] ;
 		
 		framesEsquerda = new TextureRegion[colunas+1];
 		for (i=0; i < colunas; i++) {
-			framesEsquerda[i] = matrizFrames[0][i];
+			framesEsquerda[i] = matrizFrames[1][i];
 		}
-		framesEsquerda[i] = matrizFrames[0][1] ;
+		framesEsquerda[i] = matrizFrames[1][1] ;
 		
 		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;

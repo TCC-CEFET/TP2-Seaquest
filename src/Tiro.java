@@ -8,7 +8,7 @@ public class Tiro {
 	protected Rectangle retangulo;
 	
 	public Tiro(String caminhoImagem, String caminhoSom, int x, int y, int largura, int altura) {
-		retangulo = new Rectangle(x, y, largura, altura);
+		retangulo = new Rectangle(x, y, 64, 4);
 	}
 
 	protected void Atira(float velocidade) {
