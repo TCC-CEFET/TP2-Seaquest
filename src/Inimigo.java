@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 public class Inimigo {
 	static private int pontos=20;
 	static private float velocidade=125 ; // px por s
+	static private int velocidadeVerticalTubarao = 25;
+	private float tempoOscilacaoTubarao = 0; 
 	
 	protected String caminhoImagem ;
 	protected int largura, altura ;
@@ -32,7 +34,7 @@ public class Inimigo {
 		this.tempoEntreFrame = tempoEntreFrame ;
 		this.direcao = Direcao.getDirecaoAleatoria() ;
 		
-		retangulo = new Rectangle(direcao.getXInicial(largura), Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
+		retangulo = new Rectangle(direcao.getXInicial(largura), linha == 4 ? Background.getAlturaLinha(linha)-25 : Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		
 		montaAnimacao() ;
 	}
@@ -74,14 +76,32 @@ public class Inimigo {
 	}
 	
 	public void movimenta() {
-		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
-		else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
+		
+		
+//		tempoOscilacaoTubarao += Gdx.graphics.getDeltaTime();
+//
+//		if (tempoOscilacaoTubarao >= 0.5) {
+//			tempoOscilacaoTubarao = 0;
+//			velocidadeVerticalTubarao *= -1;
+//		}
+//		if (altura == 16) {
+//			retangulo.y += velocidadeVerticalTubarao * Gdx.graphics.getDeltaTime() ;
+//			
+//			if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+//			else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
+//		}
+//		else {
+			if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+			else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
+//		}
 	}
 	
 	public boolean paraRemover() {
-		if (retangulo.x < 0-largura) return true ;
-		if (retangulo.x > Background.getLargura()) return true ;
+		if (retangulo.x < 0-largura && this.direcao == Direcao.ESQUERDA) return true ;
+		if (retangulo.x > Background.getLargura() && this.direcao == Direcao.DIREITA) return true ;
 		
 		return false ;
 	}
+	
+	
 }

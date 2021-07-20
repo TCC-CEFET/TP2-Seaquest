@@ -8,6 +8,7 @@ enum Direcao {
 	}
 	
 	public int getXInicial(int largura) {
-		return this == Direcao.DIREITA ? 0-largura : Background.getLargura() ;
+		if (largura == Mergulhador.getLargura()) return this == Direcao.DIREITA ? 0-largura : Background.getLargura() ;
+		else return this == Direcao.DIREITA ? 0-largura-200 : Background.getLargura()+200 ;
 	}
 } ;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Mergulhador {
 	static private int pontos=50;
-	static private float velocidade=125;
+	static private float velocidade=85;
 	
 	static private String caminhoImagem="sprites\\mergulhador_spritesheet.png";
 	static private int largura=52, altura=56 ;
@@ -67,9 +67,13 @@ public class Mergulhador {
 	}
 	
 	public boolean paraRemover() {
-		if (retangulo.x < 0-largura) return true ;
-		if (retangulo.x > Background.getLargura()) return true ;
+		if (retangulo.x < 0-largura && this.direcao == Direcao.ESQUERDA) return true ;
+		if (retangulo.x > Background.getLargura() && this.direcao == Direcao.DIREITA) return true ;
 		
 		return false ;
+	}
+	
+	public static int getLargura() {
+		return Mergulhador.largura;
 	}
 }

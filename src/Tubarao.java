@@ -9,4 +9,5 @@ public class Tubarao extends Inimigo {
 	public Tubarao(int linha) {
 		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
 	}
+	
 }

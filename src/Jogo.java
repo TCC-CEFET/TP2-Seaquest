@@ -1,16 +1,20 @@
+import java.awt.font.ShapeGraphicAttribute;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
+//import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+//import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+//import com.badlogic.gdx.math.Rectangle;
 
 public class Jogo extends ApplicationAdapter {
 	public SpriteBatch batch;
@@ -24,6 +28,8 @@ public class Jogo extends ApplicationAdapter {
 	
 	float stateTime ; // Controla o tempo do jogo
 	float proximaLeva ; // Determinha o tempo da proxima leva de seres spawnados
+//	
+//	ShapeRenderer shape;
 	
 	@Override
 	public void create() {
@@ -34,6 +40,8 @@ public class Jogo extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Background.getLargura(), Background.getAltura());
 		fundo = new Background("sprites\\background.png");
+		
+//		shape = new ShapeRenderer();
 		
 		ondas = new Ondas() ;
 		submarino = new Submarino() ;
@@ -54,6 +62,12 @@ public class Jogo extends ApplicationAdapter {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		
+//		shape.setProjectionMatrix(camera.combined);
+//		shape.begin(ShapeType.Line);
+//		shape.setColor(Color.RED);
+//		shape.rect(200, 20, 400, 40);
+//		shape.end();
+		
 		desenhaObjetos(batch, stateTime) ;
 		
 		movimentaObjetos() ;
@@ -65,8 +79,9 @@ public class Jogo extends ApplicationAdapter {
 		proximaLeva = stateTime + Background.getLargura()/Inimigo.getVelocidade() ;
 		
 		for (int i=0; i < Background.getQuantidadeLinhas(); i++) {
-			if (new Random().nextInt(3) <= 1) { // Verifica se vai spawnar algum inimigo na linha i
-				switch (new Random().nextInt(5)) { // Verifica qual inimigo
+//			if (new Random().nextInt(3) <= 1) { // Verifica se vai spawnar algum inimigo na linha i
+			if (new Random().nextInt(5) == 0) mergulhadores.add(new Mergulhador(i));	
+			switch (new Random().nextInt(4)) { // Verifica qual inimigo
 					case 0, 1:
 						inimigos.add(new Tubarao(i)) ;
 						break ;
@@ -74,8 +89,9 @@ public class Jogo extends ApplicationAdapter {
 						inimigos.add(new SubmarinoInimigo(i)) ;
 						break ;
 					default:
-						mergulhadores.add(new Mergulhador(i)) ;
-				}
+//						mergulhadores.add(new Mergulhador(i)) ;
+//				}
+			
 			}
 		}
 	}
