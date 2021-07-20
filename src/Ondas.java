@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Ondas {
 	static private String caminhoImagem="sprites\\ondas_spritesheet.png";
-	static private int largura=PropriedadesTela.getLargura(), altura=16 ;
+	static private int largura=Background.getLargura(), altura=16 ;
 	static private int colunas=1, linhas=1 ;
 	static private int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
 	static private int posY=356 ;

@@ -17,23 +17,28 @@ public class Inimigo {
 	protected float tempoEntreFrame ;
 	
 	protected Rectangle retangulo ;
-	protected Direcao direcao=Direcao.DIREITA ;
+	protected Direcao direcao ;
 	
 	protected TextureRegion[] framesDireita ;
 	protected Animation animacaoDireita ;
 	protected TextureRegion[] framesEsquerda ;
 	protected Animation animacaoEsquerda ;
 	
-	public Inimigo(int x, int y, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame) {
+	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame) {
 		this.caminhoImagem = caminhoImagem ;
 		this.largura = largura ; this.altura = altura ;
 		this.colunas = colunas ; this.linhas = linhas ;
 		larguraRealSheet=largura*colunas ; alturaRealSheet=altura*linhas ;
 		this.tempoEntreFrame = tempoEntreFrame ;
+		this.direcao = Direcao.getDirecaoAleatoria() ;
 		
-		retangulo = new Rectangle(x, y, largura, altura) ;
+		retangulo = new Rectangle(direcao.getXInicial(largura), Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		
 		montaAnimacao() ;
+	}
+	
+	static public float getVelocidade() {
+		return velocidade ;
 	}
 	
 	public void montaAnimacao() {
@@ -75,7 +80,7 @@ public class Inimigo {
 	
 	public boolean paraRemover() {
 		if (retangulo.x < 0-largura) return true ;
-		if (retangulo.x > PropriedadesTela.getLargura()) return true ;
+		if (retangulo.x > Background.getLargura()) return true ;
 		
 		return false ;
 	}

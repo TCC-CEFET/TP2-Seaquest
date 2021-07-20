@@ -23,12 +23,12 @@ public class Mergulhador {
 	private Rectangle retangulo ;
 	private Direcao direcao ;
 	
-	public Mergulhador(int x, int y) {
-		retangulo = new Rectangle(x, y-(altura/2), largura, altura) ;
-		direcao = Direcao.DIREITA ;
+	public Mergulhador(int linha) {
+		this.direcao = Direcao.getDirecaoAleatoria() ;
+		retangulo = new Rectangle(direcao.getXInicial(largura), Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 	}
 	
-	public void montaAnimacao() {
+	static public void montaAnimacao() {
 		float tempoEntreFrame = 0.15f ;
 		
 		Texture imagem = new Texture(caminhoImagem) ;
@@ -38,15 +38,15 @@ public class Mergulhador {
 		framesDireita = new TextureRegion[colunas+1] ;
 		int i ;
 		for (i=0; i < colunas; i++) {
-			framesDireita[i] = matrizFrames[0][i];
+			framesDireita[i] = matrizFrames[1][i];
 		}
-		framesDireita[i] = matrizFrames[0][1] ;
+		framesDireita[i] = matrizFrames[1][1] ;
 		
 		framesEsquerda = new TextureRegion[colunas+1];
 		for (i=0; i < colunas; i++) {
-			framesEsquerda[i] = matrizFrames[1][i];
+			framesEsquerda[i] = matrizFrames[0][i];
 		}
-		framesEsquerda[i] = matrizFrames[1][1] ;
+		framesEsquerda[i] = matrizFrames[0][1] ;
 		
 		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
@@ -63,12 +63,12 @@ public class Mergulhador {
 	
 	public void movimenta() {
 		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
-		else retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+		else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
 	}
 	
 	public boolean paraRemover() {
 		if (retangulo.x < 0-largura) return true ;
-		if (retangulo.x > PropriedadesTela.getLargura()) return true ;
+		if (retangulo.x > Background.getLargura()) return true ;
 		
 		return false ;
 	}

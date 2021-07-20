@@ -6,7 +6,7 @@ public class SubmarinoInimigo extends Inimigo {
 	static private int largura=48, altura=30 ;
 	static private int colunas=3, linhas=2 ;
 	
-	public SubmarinoInimigo(int x, int y) {
-		super(x, y-(altura/2), caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
+	public SubmarinoInimigo(int linha) {
+		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
 	}
 }

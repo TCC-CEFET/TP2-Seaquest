@@ -6,7 +6,7 @@ public class Tubarao extends Inimigo {
 	static private int largura=48, altura=16 ;
 	static private int colunas=3, linhas=2 ;
 	
-	public Tubarao(int x, int y) {
-		super(x, y-(altura/2), caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
+	public Tubarao(int linha) {
+		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame) ;
 	}
 }

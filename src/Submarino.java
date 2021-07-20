@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Submarino {
+	static private int velocidadeX=200, velocidadeY=120 ;
 	static private String caminhoImagem="sprites\\submarino_spritesheet.png";
 	static private int largura=96, altura=36 ;
 	static private int colunas=3, linhas=2 ;
@@ -27,7 +28,7 @@ public class Submarino {
 	
 	
 	public Submarino() {
-		retangulo = new Rectangle((PropriedadesTela.getLargura()/2)-largura, Ondas.getPosY(), largura, altura) ;
+		retangulo = new Rectangle((Background.getLargura()/2)-largura, Ondas.getPosY(), largura, altura) ;
 		direcao = Direcao.DIREITA ;
 		this.montaAnimacao() ;
 	}
@@ -35,19 +36,19 @@ public class Submarino {
 	public void movimenta() {
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
 			direcao = Direcao.ESQUERDA ;
-			retangulo.x -= 200 * Gdx.graphics.getDeltaTime();
+			retangulo.x -= velocidadeX * Gdx.graphics.getDeltaTime();
 		}
 	    if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
 	    	direcao = Direcao.DIREITA ;
-	    	retangulo.x += 200 * Gdx.graphics.getDeltaTime();
+	    	retangulo.x += velocidadeX * Gdx.graphics.getDeltaTime();
 	    }
-	    if(Gdx.input.isKeyPressed(Keys.DOWN)) retangulo.y -= 200 * Gdx.graphics.getDeltaTime();
-	    if(Gdx.input.isKeyPressed(Keys.UP)) retangulo.y += 200 * Gdx.graphics.getDeltaTime();
+	    if(Gdx.input.isKeyPressed(Keys.DOWN)) retangulo.y -= velocidadeY * Gdx.graphics.getDeltaTime();
+	    if(Gdx.input.isKeyPressed(Keys.UP)) retangulo.y += velocidadeY * Gdx.graphics.getDeltaTime();
 	    
 	    if(retangulo.x < 0) retangulo.x = 0;
-	    else if(retangulo.x > PropriedadesTela.getLargura()-largura) retangulo.x = PropriedadesTela.getLargura()-largura;
+	    else if(retangulo.x > Background.getLargura()-largura) retangulo.x = Background.getLargura()-largura;
 	    
-	    if(retangulo.y < PropriedadesTela.getLimiteInferior()) retangulo.y = PropriedadesTela.getLimiteInferior();
+	    if(retangulo.y < Background.getLimiteInferior()) retangulo.y = Background.getLimiteInferior();
 	    else if(retangulo.y > Ondas.getPosY()) retangulo.y = Ondas.getPosY();
 	}
 	
