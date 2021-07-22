@@ -29,7 +29,6 @@ public class Inimigo {
 	private TextureRegion[] framesEsquerda ;
 	private Animation animacaoEsquerda ;
 	
-	private boolean morto ;
 	
 	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio, Background fundo) {
 		this.caminhoAudio = caminhoAudio ;
@@ -38,7 +37,6 @@ public class Inimigo {
 		larguraRealSheet=largura*colunas ; alturaRealSheet=altura*linhas ;
 		this.tempoEntreFrame = tempoEntreFrame ;
 		this.direcao = Direcao.getDirecaoAleatoria() ;
-		morto = false ;
 		
 		retangulo = new Rectangle(direcao.getXInicial(largura, fundo), linha == 4 ? fundo.getAlturaLinha(linha)-25 : fundo.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		
@@ -128,12 +126,13 @@ public class Inimigo {
 			if (retangulo.overlaps(tiro.getRetangulo())) {
 				some(submarino) ;
 				iterTiros.remove() ;
-				this.morre() ;
+				this.morre(submarino) ;
 			}
 		}
 	}
 	
-	public void morre() {
+	public void morre(Submarino submarino) {
 		retangulo.y = fundo.getAltura()*-1 ;
+		some(submarino) ;
 	}
 }

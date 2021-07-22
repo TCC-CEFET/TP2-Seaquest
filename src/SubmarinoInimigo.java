@@ -39,7 +39,7 @@ public class SubmarinoInimigo extends Inimigo {
 	@Override
 	public void verificaPosicao(ArrayList<TiroSubmarino> tiros, Submarino submarino) {
 		if (tiro != null) {
-			if (tiro.getRetangulo().overlaps(submarino.getRetangulo())) {
+			if (tiro.getRetangulo().overlaps(submarino.getRetangulo()) && !submarino.getExplodindo()) {
 				submarino.some() ;
 			}
 			
