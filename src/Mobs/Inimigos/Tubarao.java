@@ -1,8 +1,8 @@
-package Mobs.Inimigos;
+package mobs.inimigos;
 
 import com.badlogic.gdx.Gdx;
 
-import Ambiente.* ;
+import ambiente.*;
 
 public class Tubarao extends Inimigo {	
 	static private String caminhoSpriteSheet="sprites\\tubarao_spritesheet.png";

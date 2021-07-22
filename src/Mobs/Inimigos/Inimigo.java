@@ -1,4 +1,4 @@
-package Mobs.Inimigos;
+package mobs.inimigos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-import Ambiente.* ;
-import Mobs.Caracteristicas.* ;
-import Mobs.Passivos.* ;
-import Tiros.* ;
+import mobs.caracteristicas.* ;
+import mobs.passivos.* ;
+import ambiente.*;
+import tiros.*;
 
 public class Inimigo {
 	protected Background fundo ;

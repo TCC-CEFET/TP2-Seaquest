@@ -1,4 +1,4 @@
-package Mobs.Passivos;
+package mobs.passivos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-import Ambiente.* ;
-import Mobs.Caracteristicas.* ;
-import Mobs.Inimigos.* ;
+import mobs.caracteristicas.* ;
+import mobs.inimigos.* ;
+import ambiente.*;
 
 public class Mergulhador {
 	private Background fundo ;

@@ -1,6 +1,6 @@
-package Mobs.Inimigos;
+package mobs.inimigos;
 
-import Ambiente.* ;
+import ambiente.*;
 
 public class Patrulha extends Inimigo {
 	static private String caminhoSpriteSheet="sprites\\inimigo_spritesheet.png";

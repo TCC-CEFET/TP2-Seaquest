@@ -1,4 +1,4 @@
-package Rodar;
+package rodar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import Ambiente.* ;
-import Mobs.Inimigos.* ;
-import Mobs.Passivos.* ;
+import mobs.inimigos.* ;
+import mobs.passivos.* ;
+import ambiente.*;
 
 public class Jogo extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -47,7 +47,6 @@ public class Jogo extends ApplicationAdapter {
 		mergulhadores = new ArrayList<Mergulhador>() ;
 	}
 	
-
 	@Override
 	public void render() {
 		stateTime += Gdx.graphics.getDeltaTime() ;

@@ -1,4 +1,4 @@
-package Mobs.Passivos;
+package mobs.passivos;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
@@ -17,12 +17,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
-import Ambiente.* ;
-import Mobs.Caracteristicas.* ;
-import Mobs.Inimigos.* ;
-import Mobs.Passivos.* ;
-import Rodar.* ;
-import Tiros.* ;
+import mobs.caracteristicas.* ;
+import mobs.inimigos.* ;
+import mobs.passivos.* ;
+import ambiente.*;
+import rodar.*;
+import tiros.*;
 
 public class Submarino {
 	private Background fundo ;
