@@ -54,6 +54,8 @@ public class Submarino {
 	private boolean estaDesembarcando ;
 	private boolean explodindo ;
 	private Float tempoInicialExplosao ;
+	private boolean morreu ;
+	private int vidasExtrasAdiquiridas ;
 	
 	private ArrayList<TiroSubmarino> tiros ;
 	
@@ -65,7 +67,7 @@ public class Submarino {
 		desembarcou6 = 0 ;
 		jaDesembarcou = true ;
 		pontuacao = 0 ;
-		vidas = 1 ;//4 ;
+		vidas = 4 ;
 		levelO2 = 0 ;
 		estaEnchendo = false ;
 		somEnchendoEstaTocando = false ;
@@ -79,10 +81,14 @@ public class Submarino {
 		tiros = new ArrayList<TiroSubmarino>() ;
 		estaDesembarcando = false ;
 		explodindo = false ;
+		morreu = false ;
+		vidasExtrasAdiquiridas = 0 ;
 		this.montaAnimacao() ;
 	}
 	
 	public void respawna() {
+		morreu = false ;
+		
 		if (vidas <= 0) {
 			retangulo.setX(fundo.getLargura()) ;
 			return ;
@@ -94,8 +100,6 @@ public class Submarino {
 	}
 	
 	public void controla(float stateTime) {
-		if (explodindo) return ;
-		
 		// Movimenta os tiros
 		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
 		while (iterTiros.hasNext()) {
@@ -104,7 +108,7 @@ public class Submarino {
 		}
 		
 		// Sai se nao puder movimentar
-		if (vidas <= 0 || estaEnchendo) {
+		if (vidas <= 0 || estaEnchendo || explodindo) {
 			return ;
 		}
 		
@@ -192,6 +196,15 @@ public class Submarino {
 	
 	public void aumentaPontuacao(int pontos) {
 		pontuacao += pontos ;
+		
+		if (pontuacao >= 10000*(vidasExtrasAdiquiridas+1)) {
+			aumentaVidas() ;
+			vidasExtrasAdiquiridas++ ;
+		}
+	}
+	
+	public void aumentaVidas() {
+		if (vidas < 7) vidas++ ;
 	}
 	
 	public void desembarca() {
@@ -199,12 +212,6 @@ public class Submarino {
 		
 		if (mergulhadoresSalvos == 6 || estaDesembarcando) {
 			estaDesembarcando = true ;
-			
-			ShapeRenderer shapeRenderer = new ShapeRenderer() ;
-			shapeRenderer.begin(ShapeType.FilledRectangle) ;
-			shapeRenderer.setColor(35/255.0f, 14/255.0f, 94/255.0f, 1) ;
-			shapeRenderer.filledRect(0, 84, fundo.getLargura(), 272);
-			shapeRenderer.end() ;
 			
 			if (levelO2 >= 1) {
 				levelO2 -= maximoTanqueO2/4 ;
@@ -229,27 +236,22 @@ public class Submarino {
 				Mergulhador.aumentaPontos() ;
 				Inimigo.aumentaPontos() ;
 				estaDesembarcando = false ;
-				Inimigo.aumentaVelocidade();
+				Inimigo.aumentaVelocidadePadrao();
 			}
 		} else if (mergulhadoresSalvos == 0) {
 			some() ;
 			jaDesembarcou = true ;
-			Inimigo.aumentaVelocidade();
+			Inimigo.aumentaVelocidadePadrao();
 		} else {
 			mergulhadoresSalvos-- ;
 			jaDesembarcou = true ;
-			Inimigo.aumentaVelocidade();
+			Inimigo.aumentaVelocidadePadrao();
 		}
 	}
 	
 	public void montaAnimacao() {
-		TextureRegion[] framesDireita ;
-		TextureRegion[] framesEsquerda ;
-		TextureRegion[] framesExplosaoEsquerda ;
-		TextureRegion[] framesExplosaoDireita ;
-		
 		String caminhoImagem="sprites\\submarino_spritesheet.png";
-		int colunas=5, linhas=2 ;
+		int colunas=5, linhas=3 ;
 		int colunasNormal=3 ; // Primeiras colunas
 		int colunasExplosao=2 ; // colunas finais
 		int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
@@ -266,14 +268,14 @@ public class Submarino {
 		
 		TextureRegion[][] matrizFrames = TextureRegion.split(imagem, larguraRealSheet/colunas, alturaRealSheet/linhas) ;
 
-		framesDireita = new TextureRegion[colunasNormal+1] ;
+		TextureRegion[] framesDireita = new TextureRegion[colunasNormal+1] ;
 		int i ;
 		for (i=0; i < colunasNormal; i++) {
 			framesDireita[i] = matrizFrames[0][i];
 		}
 		framesDireita[i] = matrizFrames[0][1] ;
 		
-		framesEsquerda = new TextureRegion[colunasNormal+1];
+		TextureRegion[] framesEsquerda = new TextureRegion[colunasNormal+1];
 		for (i=0; i < colunasNormal; i++) {
 			framesEsquerda[i] = matrizFrames[1][i];
 		}
@@ -282,15 +284,28 @@ public class Submarino {
 		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
 		
-		framesExplosaoDireita = new TextureRegion[colunasExplosao] ;
-		for (i=0; i < 6; i+=2) {
-			framesExplosaoDireita[0] = matrizFrames[0][colunas-colunasExplosao];
-			framesExplosaoDireita[1] = matrizFrames[0][colunas-colunasExplosao+1];
+		int quantidadeFramesExplosao = 10 ;
+		TextureRegion[] framesExplosaoDireita = new TextureRegion[quantidadeFramesExplosao] ;
+		for (i=0; i < 4; i+=2) {
+			framesExplosaoDireita[i] = matrizFrames[0][3];
+			framesExplosaoDireita[i+1] = matrizFrames[0][4];
+		}
+		for (i=4; i < quantidadeFramesExplosao; i+=3) {
+			framesExplosaoDireita[i] = matrizFrames[2][0];
+			framesExplosaoDireita[i+1] = matrizFrames[2][1];
+			framesExplosaoDireita[i+2] = matrizFrames[2][2];
 		}
 		
-		framesExplosaoEsquerda = new TextureRegion[colunasExplosao] ;
-		framesExplosaoEsquerda[0] = matrizFrames[1][colunas-colunasExplosao];
-		framesExplosaoEsquerda[1] = matrizFrames[1][colunas-colunasExplosao+1];
+		TextureRegion[] framesExplosaoEsquerda = new TextureRegion[quantidadeFramesExplosao] ;
+		for (i=0; i < 4; i+=2) {
+			framesExplosaoEsquerda[i] = matrizFrames[1][3];
+			framesExplosaoEsquerda[i+1] = matrizFrames[1][4];
+		}
+		for (i=4; i < quantidadeFramesExplosao; i+=3) {
+			framesExplosaoEsquerda[i] = matrizFrames[2][0];
+			framesExplosaoEsquerda[i+1] = matrizFrames[2][1];
+			framesExplosaoEsquerda[i+2] = matrizFrames[2][2];
+		}
 		
 		animacaoExplosaoDireita = new Animation(tempoEntreFrameExplosao, framesExplosaoDireita) ;
 		animacaoExplosaoEsquerda = new Animation(tempoEntreFrameExplosao, framesExplosaoEsquerda) ;
@@ -310,8 +325,8 @@ public class Submarino {
 				respawna() ;
 				return ;
 			}
-			if (direcao == Direcao.DIREITA) frameAtual = animacaoExplosaoDireita.getKeyFrame(stateTime, true);
-			else frameAtual = animacaoExplosaoEsquerda.getKeyFrame(stateTime, true);
+			if (direcao == Direcao.DIREITA) frameAtual = animacaoExplosaoDireita.getKeyFrame(stateTime-tempoInicialExplosao, true);
+			else frameAtual = animacaoExplosaoEsquerda.getKeyFrame(stateTime-tempoInicialExplosao, true);
 		} else {
 			if (direcao == Direcao.DIREITA) frameAtual = animacaoDireita.getKeyFrame(stateTime, true);
 			else frameAtual = animacaoEsquerda.getKeyFrame(stateTime, true);
@@ -405,8 +420,10 @@ public class Submarino {
 		}
 	}
 	
+	
 	public void some() {
 		if (explodindo || vidas <= 0) return ;
+		morreu = true ;
 		Gdx.audio.newSound(Gdx.files.internal("sounds\\destroyPlayer.mp3")).play() ;
 		explodindo = true ;
 		
@@ -415,19 +432,31 @@ public class Submarino {
 		if (mergulhadoresSalvos > 0) mergulhadoresSalvos-- ;
 	}
 	
+	
 	public int getDesembarcou6() {
 		return this.desembarcou6 ;
 	}
+	
 	
 	public ArrayList<TiroSubmarino> getTiros() {
 		return tiros ;
 	}
 	
+	
 	public Rectangle getRetangulo() {
 		return retangulo ;
 	}
 	
+	
 	public boolean getExplodindo() {
 		return explodindo ;
+	}
+	
+	public boolean getEstaDesembarcando() {
+		return estaDesembarcando ;
+	}
+	
+	public boolean getMorreu() {
+		return morreu ;
 	}
 }

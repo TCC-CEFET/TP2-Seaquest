@@ -123,7 +123,7 @@ public class Mergulhador {
 			if (retangulo.overlaps(inimigo.getRetangulo())) {
 				if (animacaoNormal) {
 					animacaoNormal = false ;
-					velocidade = Inimigo.getVelocidade() ;
+					velocidade = Inimigo.getVelocidadePadrao() ;
 					direcao = inimigo.getDirecao() ;
 					tempoEntreFrame = 0.07f ;
 					atualizaAnimacao() ;

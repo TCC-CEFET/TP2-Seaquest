@@ -14,12 +14,12 @@ public class SubmarinoInimigo extends Inimigo {
 	private TiroInimigo tiro ;
 	
 	public SubmarinoInimigo(int linha, Background fundo) {
-		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame, caminhoAudio, fundo) ;
+		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame, caminhoAudio, fundo, null) ;
 	}
 	
 	@Override
-	public void controla() {
-		super.controla();
+	public void controla(float stateTime) {
+		super.controla(stateTime);
 		
 		if (tiro == null && fundo.estaEmTela(retangulo)) {
 			tiro = new TiroInimigo(direcao == Direcao.DIREITA ? retangulo.x+largura : retangulo.x-TiroInimigo.getLargura(), retangulo.y+(altura/2), direcao, fundo) ;

@@ -25,15 +25,16 @@ public class Jogo extends ApplicationAdapter {
 	private Ondas ondas ;
 	private ArrayList<Inimigo> inimigos ;
 	private ArrayList<Mergulhador> mergulhadores ;
-	private ArrayList<TiroInimigo> tirosInimigos ;
 	
 	private float stateTime ; // Controla o tempo do jogo
 	private float proximaLeva ; // Determinha o tempo da proxima leva de seres spawnados
+	private float proximaLevaPatrulha ; // Determinha o tempo da proximpatrulha spawnar
 	
 	@Override
 	public void create() {
 		stateTime = 0f ;
 		proximaLeva = 1f ;
+		proximaLevaPatrulha = 1f ;
 		
 		fundo = new Background() ;
 		
@@ -61,19 +62,29 @@ public class Jogo extends ApplicationAdapter {
 		
 		desenhaObjetos() ;
 		
-		movimentaObjetos() ;
-		
 		verificaPosicoes() ;
+		
+		movimentaObjetos() ;
 	}
 	
 	public void criaObjetos(float stateTime) {
+		if (submarino.getMorreu()) {
+			inimigos.clear() ;
+			mergulhadores.clear() ;
+			return ;
+		}
+		
+		if (submarino.getDesembarcou6() >= 2 && stateTime > proximaLevaPatrulha) {
+			proximaLevaPatrulha = stateTime+(fundo.getLargura()+200)/Patrulha.getVelocidade() ;
+			if (new Random().nextFloat() <= 0.70) inimigos.add(new Patrulha(fundo)) ;
+		}
+		
 		if (stateTime < proximaLeva) return ;
 
-		proximaLeva = stateTime + (fundo.getLargura()+200)/Inimigo.getVelocidade() ;
+		proximaLeva = stateTime + (fundo.getLargura()+200)/Inimigo.getVelocidadePadrao() ;
 		
-		if (submarino.getDesembarcou6() >= 2 && new Random().nextBoolean()) inimigos.add(new Patrulha(fundo)) ;
 		for (int i=0; i < fundo.getQuantidadeLinhas(); i++) {
-			if (new Random().nextInt(20) <= 13) { // Verifica se vai spawnar algo na linha i
+			if (new Random().nextFloat() <= 0.75) { // Verifica se vai spawnar algo na linha i
 				switch (new Random().nextInt(5)) { // Verifica o que vai spawnar na linha
 					case 0, 1, 2:
 						inimigos.add(new Random().nextInt(2) == 0 ? new Tubarao(i, fundo) : new SubmarinoInimigo(i, fundo)) ;
@@ -89,6 +100,13 @@ public class Jogo extends ApplicationAdapter {
 	public void desenhaObjetos() {
 		batch.begin();
 		batch.draw(fundo.getImagem(), 0, 0) ;
+		
+		if (submarino.getEstaDesembarcando()) {
+			submarino.anima(batch, stateTime, camera) ;
+			ondas.anima(batch, stateTime) ;
+			batch.end() ;
+			return ;
+		}
 		
 		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
 		while (iterInimigos.hasNext()) {
@@ -114,7 +132,7 @@ public class Jogo extends ApplicationAdapter {
 		while (iterInimigos.hasNext()) {
 			Inimigo inimigo = iterInimigos.next() ;
 			
-			inimigo.controla() ;
+			inimigo.controla(stateTime) ;
 		}
 		
 		Iterator<Mergulhador> iterMergulhadores = mergulhadores.iterator() ;

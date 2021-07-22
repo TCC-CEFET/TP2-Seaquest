@@ -4,7 +4,7 @@ enum Direcao {
 	ESQUERDA, DIREITA ;
 	
 	static public Direcao getDirecaoAleatoria() {
-		return new Random().nextBoolean() ? Direcao.DIREITA : Direcao.ESQUERDA ;
+		return new Random().nextFloat() <= 0.5 ? Direcao.DIREITA : Direcao.ESQUERDA ;
 	}
 	
 	public int getXInicial(int largura, Background fundo) {

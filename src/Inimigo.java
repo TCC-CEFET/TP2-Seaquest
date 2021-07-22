@@ -13,8 +13,9 @@ public class Inimigo {
 	protected Background fundo ;
 	
 	static private int pontos=20 ;
-	static private int velocidade=125 ; // px por s
+	static private int velocidadePadrao=125 ;
 	
+	protected int velocidade ; // px por s
 	private int largura, altura ;
 	private int colunas, linhas ;
 	private int larguraRealSheet, alturaRealSheet ;
@@ -30,13 +31,15 @@ public class Inimigo {
 	private Animation animacaoEsquerda ;
 	
 	
-	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio, Background fundo) {
+	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio, Background fundo, Integer velocidade) {
 		this.caminhoAudio = caminhoAudio ;
 		this.largura = largura ; this.altura = altura ;
 		this.colunas = colunas ; this.linhas = linhas ;
 		larguraRealSheet=largura*colunas ; alturaRealSheet=altura*linhas ;
 		this.tempoEntreFrame = tempoEntreFrame ;
 		this.direcao = Direcao.getDirecaoAleatoria() ;
+		if (velocidade != null) this.velocidade = velocidade ;
+		else this.velocidade = velocidadePadrao ;
 		
 		retangulo = new Rectangle(direcao.getXInicial(largura, fundo), linha == 4 ? fundo.getAlturaLinha(linha)-25 : fundo.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		
@@ -45,8 +48,8 @@ public class Inimigo {
 		this.fundo = fundo ;
 	}
 	
-	static public int getVelocidade() {
-		return velocidade ;
+	static public int getVelocidadePadrao() {
+		return velocidadePadrao ;
 	}
 	
 	public Direcao getDirecao() {
@@ -85,7 +88,7 @@ public class Inimigo {
 		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
 	}
 	
-	public void controla() {
+	public void controla(float stateTime) {
 		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
 		else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
 	}
@@ -109,8 +112,8 @@ public class Inimigo {
 		if (pontos < 90) pontos += 10 ;
 	}
 	
-	static void aumentaVelocidade() {
-		velocidade += 10 ;
+	static void aumentaVelocidadePadrao() {
+		velocidadePadrao += 10 ;
 	}
 	
 	public void some(Submarino submarino) {
