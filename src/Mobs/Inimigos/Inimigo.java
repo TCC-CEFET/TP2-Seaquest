@@ -1,3 +1,5 @@
+package Mobs.Inimigos;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -7,6 +9,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+
+import Ambiente.* ;
+import Mobs.Caracteristicas.* ;
+import Mobs.Passivos.* ;
+import Tiros.* ;
 
 public class Inimigo {
 	protected Background fundo ;
@@ -110,7 +117,7 @@ public class Inimigo {
 		if (pontos < 90) pontos += 10 ;
 	}
 	
-	static void aumentaVelocidadePadrao() {
+	public static void aumentaVelocidadePadrao() {
 		velocidadePadrao += 10 ;
 	}
 	

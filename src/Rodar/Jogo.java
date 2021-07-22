@@ -1,3 +1,5 @@
+package Rodar;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -8,6 +10,10 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import Ambiente.* ;
+import Mobs.Inimigos.* ;
+import Mobs.Passivos.* ;
 
 public class Jogo extends ApplicationAdapter {
 	private SpriteBatch batch;

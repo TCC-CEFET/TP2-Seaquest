@@ -1,4 +1,9 @@
+package Tiros;
+
 import com.badlogic.gdx.Gdx;
+
+import Ambiente.* ;
+import Mobs.Caracteristicas.* ;
 
 public class TiroSubmarino extends Tiro {
 	static private String caminhoImagem="sprites\\tiroSubmarino.png";

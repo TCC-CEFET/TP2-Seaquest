@@ -1,3 +1,8 @@
+package Tiros;
+
+import Ambiente.* ;
+import Mobs.Caracteristicas.* ;
+import Mobs.Inimigos.* ;
 
 public class TiroInimigo extends Tiro {
 	static private String caminhoImagem="sprites\\tiroInimigo.png";

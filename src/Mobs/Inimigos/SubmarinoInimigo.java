@@ -1,6 +1,15 @@
+package Mobs.Inimigos;
+
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import Ambiente.* ;
+import Mobs.Caracteristicas.* ;
+import Mobs.Inimigos.* ;
+import Mobs.Passivos.* ;
+import Rodar.* ;
+import Tiros.* ;
 
 public class SubmarinoInimigo extends Inimigo {
 	static private String caminhoSpriteSheet="sprites\\inimigo_spritesheet.png";

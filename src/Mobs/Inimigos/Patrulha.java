@@ -1,3 +1,7 @@
+package Mobs.Inimigos;
+
+import Ambiente.* ;
+
 public class Patrulha extends Inimigo {
 	static private String caminhoSpriteSheet="sprites\\inimigo_spritesheet.png";
 	static private String caminhoAudio="sounds\\destroyEnemySub.mp3";

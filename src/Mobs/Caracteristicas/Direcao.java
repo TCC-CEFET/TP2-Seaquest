@@ -1,6 +1,11 @@
+package Mobs.Caracteristicas;
+
 import java.util.Random;
 
-enum Direcao {
+import Ambiente.* ;
+import Mobs.Passivos.* ;
+
+public enum Direcao {
 	ESQUERDA, DIREITA ;
 	
 	static public Direcao getDirecaoAleatoria() {
