@@ -7,8 +7,8 @@ enum Direcao {
 		return new Random().nextBoolean() ? Direcao.DIREITA : Direcao.ESQUERDA ;
 	}
 	
-	public int getXInicial(int largura) {
-		if (largura == Mergulhador.getLargura()) return this == Direcao.DIREITA ? 0-largura : Background.getLargura() ;
-		else return this == Direcao.DIREITA ? 0-largura-200 : Background.getLargura()+200 ;
+	public int getXInicial(int largura, Background fundo) {
+		if (largura == Mergulhador.getLargura()) return this == Direcao.DIREITA ? 0-largura : fundo.getLargura() ;
+		else return this == Direcao.DIREITA ? 0-largura-200 : fundo.getLargura()+200 ;
 	}
 } ;

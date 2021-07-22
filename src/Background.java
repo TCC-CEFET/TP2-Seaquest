@@ -1,34 +1,43 @@
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Background {
-	private static int largura=800, altura=480 ;
-	private static int limiteInferior=84 ;
-	private static int alturaLinhas=68 ;
-	private static int quantidadeLinhas=4 ;
-	private Texture imagem;
+	private int largura, altura ;
+	private int limiteInferior ;
+	private int alturaLinhas ;
+	private int quantidadeLinhas ;
+	private Texture imagem ;
 	
-	public Background(String caminho) {
+	public Background() {
 		super();
-		this.imagem = new Texture(caminho);
+		
+		this.imagem = new Texture("sprites\\background.png") ;
+		
+		largura=800 ;
+		altura=480 ;
+		limiteInferior=84 ;
+		alturaLinhas=68 ;
+		quantidadeLinhas=4 ;
 	}
 	
 	public Texture getImagem() {
 		return this.imagem;
 	}
 
-	static public int getLargura() {
+	public int getLargura() {
 		return largura;
 	}
 
-	static public int getAltura() {
+	public int getAltura() {
 		return altura;
 	}
 	
-	static public int getLimiteInferior() {
+	public int getLimiteInferior() {
 		return limiteInferior;
 	}
 	
-	static public int getAlturaLinha(int indice) {
+	public int getAlturaLinha(int indice) {
 		if (indice < 0) indice = 0 ;
 		else if (indice > 4) indice = 3 ;
 		
@@ -36,7 +45,16 @@ public class Background {
 		return limiteInferior + (alturaLinhas*indice) + (alturaLinhas/2) ;
 	}
 	
-	static public int getQuantidadeLinhas() {
+	public int getQuantidadeLinhas() {
 		return quantidadeLinhas ;
+	}
+	
+	public boolean estaEmTela(Rectangle retangulo) {
+		if ((retangulo.x <= largura - retangulo.width) && (retangulo.x >= 0)) {
+			if ((retangulo.y <= altura - retangulo.height) && (retangulo.y >= 0)) {
+				return true ;
+			}
+		}
+		return false ;
 	}
 }

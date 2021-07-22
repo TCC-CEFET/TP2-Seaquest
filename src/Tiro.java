@@ -7,16 +7,19 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle ;
 
 public class Tiro {
+	private Background fundo ;
+	
 	private Texture imagem ;
 	private Rectangle retangulo ;
 	private int velocidade ;
 	private Direcao direcao ;
 	
-	public Tiro(String caminhoImagem, float x, float y, int largura, int altura, int velocidade, Direcao direcao) {
+	public Tiro(String caminhoImagem, float x, float y, int largura, int altura, int velocidade, Direcao direcao, Background fundo) {
 		imagem = new Texture(caminhoImagem) ;
-		retangulo = new Rectangle(x, y-(altura*2), largura, altura);
+		retangulo = new Rectangle(x, y-(altura), largura, altura);
 		this.velocidade = velocidade ;
 		this.direcao = direcao ;
+		this.fundo = fundo ;
 	}
 
 	public void movimenta() {
@@ -29,8 +32,8 @@ public class Tiro {
 	}
 	
 	public boolean paraRemover() {
-		if (retangulo.x < 0-retangulo.getWidth() && direcao == Direcao.ESQUERDA) return true ;
-		if (retangulo.x > Background.getLargura() && direcao == Direcao.DIREITA) return true ;
+		if (retangulo.x < 10-retangulo.getWidth() && direcao == Direcao.ESQUERDA) return true ;
+		if (retangulo.x > fundo.getLargura()+10 && direcao == Direcao.DIREITA) return true ;
 		
 		return false ;
 	}

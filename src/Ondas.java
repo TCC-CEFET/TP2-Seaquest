@@ -7,26 +7,26 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Ondas {
 	private int largura, altura ;
-	static private int posY ;
+	private int posY ;
 	
 	private TextureRegion[] frames ;
-	static private Animation animacao ;
+	private Animation animacao ;
 	
 	private Rectangle retanguloBaixo ; // Parte de cima das ondas
 	private Rectangle retanguloCima ; // Parte de cima das ondas
 	
-	public Ondas() {
-		largura = Background.getLargura() ;
-		altura = 16 ;
-		posY = 356 ;
+	public Ondas(Background fundo) {
+		largura=fundo.getLargura() ;
+		altura=16 ;
+		posY=356 ;
 		
 		retanguloBaixo = new Rectangle(0, posY, largura, altura) ;
 		retanguloCima = new Rectangle(0, posY + altura, largura, altura) ;
 		this.montaAnimacao();
 	}
 	
-	static public int getPosY() {
-		return posY ;
+	public int getPosY() {
+		return this.posY ;
 	}
 	
 	public Rectangle getRetanguloCima() {

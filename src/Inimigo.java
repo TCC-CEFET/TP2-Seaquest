@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Inimigo {
+	protected Background fundo ;
+	
 	static private int pontos=20 ;
 	static private int velocidade=125 ; // px por s
 	
@@ -27,17 +29,22 @@ public class Inimigo {
 	private TextureRegion[] framesEsquerda ;
 	private Animation animacaoEsquerda ;
 	
-	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio) {
+	private boolean morto ;
+	
+	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio, Background fundo) {
 		this.caminhoAudio = caminhoAudio ;
 		this.largura = largura ; this.altura = altura ;
 		this.colunas = colunas ; this.linhas = linhas ;
 		larguraRealSheet=largura*colunas ; alturaRealSheet=altura*linhas ;
 		this.tempoEntreFrame = tempoEntreFrame ;
 		this.direcao = Direcao.getDirecaoAleatoria() ;
+		morto = false ;
 		
-		retangulo = new Rectangle(direcao.getXInicial(largura), linha == 4 ? Background.getAlturaLinha(linha)-25 : Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
+		retangulo = new Rectangle(direcao.getXInicial(largura, fundo), linha == 4 ? fundo.getAlturaLinha(linha)-25 : fundo.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		
 		montaAnimacao(caminhoImagem) ;
+		
+		this.fundo = fundo ;
 	}
 	
 	static public int getVelocidade() {
@@ -87,7 +94,7 @@ public class Inimigo {
 	
 	public boolean paraRemover() {
 		if (retangulo.x < 0-largura && this.direcao == Direcao.ESQUERDA) return true ;
-		if (retangulo.x > Background.getLargura() && this.direcao == Direcao.DIREITA) return true ;
+		if (retangulo.x > fundo.getLargura() && this.direcao == Direcao.DIREITA) return true ;
 		
 		return false ;
 	}
@@ -113,7 +120,7 @@ public class Inimigo {
 		Gdx.audio.newSound(Gdx.files.internal(caminhoAudio)).play() ;
 	}
 	
-	public boolean verificaAcertado(ArrayList<TiroSubmarino> tiros, Submarino submarino) {
+	public void verificaPosicao(ArrayList<TiroSubmarino> tiros, Submarino submarino) {
 		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
 		while (iterTiros.hasNext()) {
 			TiroSubmarino tiro = iterTiros.next() ;
@@ -121,10 +128,12 @@ public class Inimigo {
 			if (retangulo.overlaps(tiro.getRetangulo())) {
 				some(submarino) ;
 				iterTiros.remove() ;
-				return true ;
+				this.morre() ;
 			}
 		}
-		
-		return false ;
+	}
+	
+	public void morre() {
+		retangulo.y = fundo.getAltura()*-1 ;
 	}
 }

@@ -10,32 +10,42 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Mergulhador {
+	private Background fundo ;
+	
 	static private int pontos=50;
 	static private float velocidadePadrao=75;
+	static float tempoEntreFramePadrao=0.15f ;
 	
 	static private int largura=52, altura=56 ;	
 	
 	static private TextureRegion[] framesDireita ;
-	static private Animation animacaoDireita ;
+	private Animation animacaoDireita ;
 	static private TextureRegion[] framesEsquerda ;
-	static private Animation animacaoEsquerda ;
+	private Animation animacaoEsquerda ;
 	
 	private Rectangle retangulo ;
 	private Direcao direcao ;
 	private float velocidade ;
+	private float tempoEntreFrame ;
+	private boolean animacaoNormal ;
 	
-	public Mergulhador(int linha) {
+	public Mergulhador(int linha, Background fundo) {
 		this.direcao = Direcao.getDirecaoAleatoria() ;
-		retangulo = new Rectangle(direcao.getXInicial(largura), Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
+		retangulo = new Rectangle(direcao.getXInicial(largura, fundo), fundo.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		velocidade = velocidadePadrao ;
+		animacaoNormal = true ;
+		
+		this.fundo = fundo ;
+		
+		tempoEntreFrame = tempoEntreFramePadrao ;
+		
+		montaAnimacao() ;
 	}
 	
-	static public void montaAnimacao() {
+	public void montaAnimacao() {
 		String caminhoImagem="sprites\\mergulhador_spritesheet.png" ;
 		int colunas=3, linhas=2 ;
 		int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
-		
-		float tempoEntreFrame = 0.15f ;
 		
 		Texture imagem = new Texture(caminhoImagem) ;
 		
@@ -58,6 +68,11 @@ public class Mergulhador {
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
 	}
 	
+	public void atualizaAnimacao() {
+		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
+		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
+	}
+	
 	public void anima(SpriteBatch batch, float stateTime) {
 		TextureRegion frameAtual ;
 		
@@ -74,7 +89,7 @@ public class Mergulhador {
 	
 	public boolean paraRemover() {
 		if (retangulo.x < 0-largura && this.direcao == Direcao.ESQUERDA) return true ;
-		if (retangulo.x > Background.getLargura() && this.direcao == Direcao.DIREITA) return true ;
+		if (retangulo.x > fundo.getLargura() && this.direcao == Direcao.DIREITA) return true ;
 		
 		return false ;
 	}
@@ -106,12 +121,20 @@ public class Mergulhador {
 			Inimigo inimigo = iterInimigos.next() ;
 			
 			if (retangulo.overlaps(inimigo.getRetangulo())) {
-				velocidade = Inimigo.getVelocidade() ;
-				direcao = inimigo.getDirecao() ;
+				if (animacaoNormal) {
+					animacaoNormal = false ;
+					velocidade = Inimigo.getVelocidade() ;
+					direcao = inimigo.getDirecao() ;
+					tempoEntreFrame = 0.07f ;
+					atualizaAnimacao() ;
+				}
 				return ;
 			}
 		}
 		
+		animacaoNormal = true ;
+		tempoEntreFrame = tempoEntreFramePadrao ;
 		velocidade = velocidadePadrao ; // Deixa na velocidade padrao
+		atualizaAnimacao() ;
 	}
 }

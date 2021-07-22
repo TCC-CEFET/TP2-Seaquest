@@ -1,17 +1,25 @@
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Submarino {
+	private Background fundo ;
+	private Ondas ondas ;
+	
 	// Parametros para imagens
 	private int velocidadeX=200, velocidadeY=120 ;
 	private int largura=96, altura=36 ;
@@ -41,11 +49,14 @@ public class Submarino {
 	private Integer idSomPoucoO2 ;
 	private float ultimoTiro ;
 	private float ultimoDesenho ;
+	private int maximoTanqueO2 = 35 ;
 	
 	private ArrayList<TiroSubmarino> tiros ;
 	
 	
-	public Submarino() {
+	public Submarino(Background fundo, Ondas ondas) {
+		this.fundo = fundo ;
+		this.ondas = ondas ;
 		mergulhadoresSalvos = 0 ;
 		desembarcou6 = 0 ;
 		jaDesembarcou = true ;
@@ -58,7 +69,7 @@ public class Submarino {
 		somPoucoO2EstaTocando = false ;
 		idSomPoucoO2 = null ;
 		ultimoTiro = 0 ;
-		retangulo = new Rectangle((Background.getLargura()/2)-largura, Ondas.getPosY(), largura, altura) ;
+		retangulo = new Rectangle((fundo.getLargura()/2)-largura, ondas.getPosY(), largura, altura) ;
 		direcao = Direcao.DIREITA ;
 		ultimoDesenho = 0 ;
 		tiros = new ArrayList<TiroSubmarino>() ;
@@ -67,12 +78,12 @@ public class Submarino {
 	
 	public void respawna() {
 		if (vidas <= 0) {
-			retangulo.setX(Background.getLargura()) ;
+			retangulo.setX(fundo.getLargura()) ;
 			return ;
 		}
 		
-		retangulo.setX((Background.getLargura()/2)-largura) ;
-		retangulo.setY(Ondas.getPosY()) ;
+		retangulo.setX((fundo.getLargura()/2)-largura) ;
+		retangulo.setY(ondas.getPosY()) ;
 		jaDesembarcou = true ;
 	}
 	
@@ -102,14 +113,14 @@ public class Submarino {
 	    if (Gdx.input.isKeyPressed(Keys.UP)) retangulo.y += velocidadeY * Gdx.graphics.getDeltaTime();
 	    
 	    if (retangulo.x < 0) retangulo.x = 0;
-	    else if(retangulo.x > Background.getLargura()-largura) retangulo.x = Background.getLargura()-largura;
+	    else if(retangulo.x > fundo.getLargura()-largura) retangulo.x = fundo.getLargura()-largura;
 	    
-	    if (retangulo.y < Background.getLimiteInferior()) retangulo.y = Background.getLimiteInferior();
-	    else if(retangulo.y > Ondas.getPosY()) retangulo.y = Ondas.getPosY();
+	    if (retangulo.y < fundo.getLimiteInferior()) retangulo.y = fundo.getLimiteInferior();
+	    else if(retangulo.y > ondas.getPosY()) retangulo.y = ondas.getPosY();
 	    
 	    // Controla o tiro
-	    if (Gdx.input.isKeyPressed(Keys.SPACE) && retangulo.y < Ondas.getPosY() && stateTime >= ultimoTiro+0.3) {
-	    	tiros.add(new TiroSubmarino(direcao == Direcao.DIREITA ? retangulo.x+largura : retangulo.x-TiroSubmarino.getLargura(), retangulo.y+(altura/2), direcao)) ;
+	    if (Gdx.input.isKeyPressed(Keys.SPACE) && retangulo.y < ondas.getPosY() && stateTime >= ultimoTiro+0.3) {
+	    	tiros.add(new TiroSubmarino(direcao == Direcao.DIREITA ? retangulo.x+largura : retangulo.x-TiroSubmarino.getLargura(), retangulo.y+(altura/2), direcao, fundo)) ;
 	    	ultimoTiro = stateTime ;
 	    }
 	}
@@ -146,16 +157,16 @@ public class Submarino {
 	
 	public void aumentaLevelO2() {
 		Sound somEnchendo = Gdx.audio.newSound(Gdx.files.internal("sounds\\refitOxygen.mp3")) ;
-		final int maximoTanque=35 ;
 		
 		desembarca() ;
+		if (estaDesembarcando) return ;
 		
 		if (somPoucoO2EstaTocando) { // Se tiver tocando o alarme para
 			somEnchendo.stop(idSomPoucoO2) ;
 			somPoucoO2EstaTocando = false ;
 		}
 		
-		if (levelO2 >= maximoTanque) {
+		if (levelO2 >= maximoTanqueO2) {
 			estaEnchendo = false ;
 			somEnchendo.stop(idSomEnchendo);
 			somEnchendoEstaTocando = false ;
@@ -175,24 +186,52 @@ public class Submarino {
 		pontuacao += pontos ;
 	}
 	
+	private boolean estaDesembarcando = false ;
 	public void desembarca() {
 		if (jaDesembarcou) return ; // Se já fez o desembarque uma vez, nao faz mais até mergulhar novamente
 		
-		jaDesembarcou = true ;
-		
-		Inimigo.aumentaVelocidade();
-		
-		if (mergulhadoresSalvos == 6) {
-			desembarcou6 += 1 ;
-			mergulhadoresSalvos = 0 ;
-			aumentaPontuacao(Mergulhador.getPontos()*6) ;
+		if (mergulhadoresSalvos == 6 || estaDesembarcando) {
+			estaDesembarcando = true ;
 			
-			Inimigo.aumentaPontos() ;
-			Mergulhador.aumentaPontos() ;
+			ShapeRenderer shapeRenderer = new ShapeRenderer() ;
+			shapeRenderer.begin(ShapeType.FilledRectangle) ;
+			shapeRenderer.setColor(35/255.0f, 14/255.0f, 94/255.0f, 1) ;
+			shapeRenderer.filledRect(0, 84, fundo.getLargura(), 272);
+			shapeRenderer.end() ;
+			
+			if (levelO2 >= 1) {
+				levelO2 -= maximoTanqueO2/4 ;
+				Gdx.audio.newSound(Gdx.files.internal("sounds\\dropOxygen.mp3")).play() ;
+				aumentaPontuacao((int) levelO2/4*40) ;
+				try { TimeUnit.MILLISECONDS.sleep(500) ; }
+				catch (InterruptedException e) { e.printStackTrace(); }
+				if (levelO2 < 0) levelO2 = 0 ;
+				return ;
+			}
+			
+			mergulhadoresSalvos -= 1 ;
+			aumentaPontuacao(Mergulhador.getPontos()) ;
+			
+			Gdx.audio.newSound(Gdx.files.internal("sounds\\deliverDiver.mp3")).play() ;
+			
+			try { TimeUnit.MILLISECONDS.sleep(300) ; }
+			catch (InterruptedException e) { e.printStackTrace(); }
+			if (mergulhadoresSalvos == 0) {
+				desembarcou6 += 1 ;
+				jaDesembarcou = true ;
+				Mergulhador.aumentaPontos() ;
+				Inimigo.aumentaPontos() ;
+				estaDesembarcando = false ;
+				Inimigo.aumentaVelocidade();
+			}
 		} else if (mergulhadoresSalvos == 0) {
 			some() ;
+			jaDesembarcou = true ;
+			Inimigo.aumentaVelocidade();
 		} else {
 			mergulhadoresSalvos-- ;
+			jaDesembarcou = true ;
+			Inimigo.aumentaVelocidade();
 		}
 	}
 	
@@ -229,7 +268,7 @@ public class Submarino {
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
 	}
 	
-	public void anima(SpriteBatch batch, float stateTime) {
+	public void anima(SpriteBatch batch, float stateTime, OrthographicCamera camera) {
 		// Anima o submarino
 		TextureRegion frameAtual ;
 		
@@ -249,7 +288,19 @@ public class Submarino {
 		BitmapFont font = new BitmapFont() ;
 		font.setColor(239.0f/255.0f, 172.0f/255.0f, 40.0f/255.0f, 255.0f/255.0f) ;
 		font.setScale(2) ;
-		font.draw(batch, String.valueOf(pontuacao), 420, Background.getAltura()-15) ;
+		font.draw(batch, String.valueOf(pontuacao), 420, fundo.getAltura()-15) ;
+		
+		// Desenha o tanque de O2
+		batch.end() ;
+		ShapeRenderer shapeRenderer = new ShapeRenderer() ;
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer.begin(ShapeType.FilledRectangle) ;
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.filledRect(160, 33, 11.5f*maximoTanqueO2, 20);
+		shapeRenderer.setColor(Color.LIGHT_GRAY) ;
+		shapeRenderer.filledRect(160, 33, 11.5f*levelO2, 20);
+		shapeRenderer.end();
+		batch.begin() ;
 		
 		// Desenha as vidas extras
 		int xVida=220, yVida=420 ;
@@ -273,7 +324,7 @@ public class Submarino {
 		}
 	}
 	
-	public void verificaPosicao(ArrayList<Inimigo> inimigos, ArrayList<Mergulhador> mergulhadores, Ondas ondas) {
+	public void verificaPosicao(ArrayList<Inimigo> inimigos, ArrayList<Mergulhador> mergulhadores) {
 		// Verifica os inimigos
 		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
 		while (iterInimigos.hasNext()) {
@@ -324,5 +375,9 @@ public class Submarino {
 	
 	public ArrayList<TiroSubmarino> getTiros() {
 		return tiros ;
+	}
+	
+	public Rectangle getRetangulo() {
+		return retangulo ;
 	}
 }

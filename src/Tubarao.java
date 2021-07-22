@@ -8,8 +8,8 @@ public class Tubarao extends Inimigo {
 	static private int largura=48, altura=16 ;
 	static private int colunas=3, linhas=2 ;
 	
-	public Tubarao(int linha) {
-		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame, caminhoAudio) ;
+	public Tubarao(int linha, Background fundo) {
+		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame, caminhoAudio, fundo) ;
 	}
 	
 //	static private int velocidadeVertical = 25;

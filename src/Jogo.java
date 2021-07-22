@@ -12,12 +12,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-//import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-//import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-//import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Jogo extends ApplicationAdapter {
-	public SpriteBatch batch;
+	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	private Background fundo;
 	
@@ -25,78 +25,68 @@ public class Jogo extends ApplicationAdapter {
 	private Ondas ondas ;
 	private ArrayList<Inimigo> inimigos ;
 	private ArrayList<Mergulhador> mergulhadores ;
+	private ArrayList<TiroInimigo> tirosInimigos ;
 	
-	float stateTime ; // Controla o tempo do jogo
-	float proximaLeva ; // Determinha o tempo da proxima leva de seres spawnados
-//	
-//	ShapeRenderer shape;
+	private float stateTime ; // Controla o tempo do jogo
+	private float proximaLeva ; // Determinha o tempo da proxima leva de seres spawnados
 	
 	@Override
 	public void create() {
 		stateTime = 0f ;
 		proximaLeva = 1f ;
 		
+		fundo = new Background() ;
+		
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Background.getLargura(), Background.getAltura());
-		fundo = new Background("sprites\\background.png");
+		camera.setToOrtho(false, fundo.getLargura(), fundo.getAltura());
 		
-//		shape = new ShapeRenderer();
-		
-		ondas = new Ondas() ;
-		submarino = new Submarino() ;
+		ondas = new Ondas(fundo) ;
+		submarino = new Submarino(fundo, ondas) ;
 		inimigos = new ArrayList<Inimigo>() ;
 		mergulhadores = new ArrayList<Mergulhador>() ;
-		Mergulhador.montaAnimacao();
 	}
 	
 
 	@Override
 	public void render() {
-		stateTime += Gdx.graphics.getDeltaTime();
+		stateTime += Gdx.graphics.getDeltaTime() ;
 		
 		criaObjetos(stateTime) ;
 		
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT) ;
 		
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		
-//		shape.setProjectionMatrix(camera.combined);
-//		shape.begin(ShapeType.Line);
-//		shape.setColor(Color.RED);
-//		shape.rect(200, 20, 400, 40);
-//		shape.end();
-		
-		desenhaObjetos(batch, stateTime) ;
+		desenhaObjetos() ;
 		
 		movimentaObjetos() ;
+		
+		verificaPosicoes() ;
 	}
 	
 	public void criaObjetos(float stateTime) {
 		if (stateTime < proximaLeva) return ;
 
-		proximaLeva = stateTime + Background.getLargura()/Inimigo.getVelocidade() ;
+		proximaLeva = stateTime + (fundo.getLargura()+200)/Inimigo.getVelocidade() ;
 		
-		for (int i=0; i < Background.getQuantidadeLinhas(); i++) {
-//			if (new Random().nextInt(3) <= 1) { // Verifica se vai spawnar algum inimigo na linha i
-			if (new Random().nextInt(5) == 0) mergulhadores.add(new Mergulhador(i));	
-			switch (new Random().nextInt(4)) { // Verifica qual inimigo
-					case 0, 1:
-						inimigos.add(new Tubarao(i)) ;
-						break ;
-					case 2, 3:
-						inimigos.add(new SubmarinoInimigo(i)) ;
+		if (submarino.getDesembarcou6() >= 2 && new Random().nextBoolean()) inimigos.add(new Patrulha(fundo)) ;
+		for (int i=0; i < fundo.getQuantidadeLinhas(); i++) {
+			if (new Random().nextInt(20) <= 13) { // Verifica se vai spawnar algo na linha i
+				switch (new Random().nextInt(5)) { // Verifica o que vai spawnar na linha
+					case 0, 1, 2:
+						inimigos.add(new Random().nextInt(2) == 0 ? new Tubarao(i, fundo) : new SubmarinoInimigo(i, fundo)) ;
 						break ;
 					default:
-//						mergulhadores.add(new Mergulhador(i)) ;
-//				}
-			
+						mergulhadores.add(new Mergulhador(i, fundo)) ;
+						inimigos.add(new Tubarao(i, fundo)) ; // Spawna o tubarao atras
+				}
 			}
 		}
 	}
 	
-	public void desenhaObjetos(SpriteBatch batch, float StateTime) {
+	public void desenhaObjetos() {
 		batch.begin();
 		batch.draw(fundo.getImagem(), 0, 0) ;
 		
@@ -112,7 +102,7 @@ public class Jogo extends ApplicationAdapter {
 			mergulhador.anima(batch, stateTime) ;
 		}
 		
-		submarino.anima(batch, stateTime) ;
+		submarino.anima(batch, stateTime, camera) ;
 		ondas.anima(batch, stateTime) ;
 		batch.end();
 	}
@@ -120,12 +110,11 @@ public class Jogo extends ApplicationAdapter {
 	public void movimentaObjetos() {
 		submarino.controla(stateTime) ;
 		
-		Iterator<Inimigo> iterInimigo = inimigos.iterator() ;
-		while (iterInimigo.hasNext()) {
-			Inimigo inimigo = iterInimigo.next() ;
+		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
+		while (iterInimigos.hasNext()) {
+			Inimigo inimigo = iterInimigos.next() ;
 			
 			inimigo.controla() ;
-			if (inimigo.paraRemover()) iterInimigo.remove() ;
 		}
 		
 		Iterator<Mergulhador> iterMergulhadores = mergulhadores.iterator() ;
@@ -133,7 +122,31 @@ public class Jogo extends ApplicationAdapter {
 			Mergulhador mergulhador = iterMergulhadores.next() ;
 			
 			mergulhador.movimenta() ;
-			if (mergulhador.paraRemover()) iterMergulhadores.remove() ;
 		}
+	}
+	
+	public void verificaPosicoes() {
+		submarino.verificaPosicao(inimigos, mergulhadores) ;
+		
+		Iterator<Mergulhador> iterMergulhadores = mergulhadores.iterator() ;
+		while (iterMergulhadores.hasNext()) {
+			Mergulhador mergulhador = iterMergulhadores.next() ;
+			
+			if (mergulhador.paraRemover()) iterMergulhadores.remove() ;
+			else mergulhador.verificaPosicao(inimigos) ;
+		}
+		
+		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
+		while (iterInimigos.hasNext()) {
+			Inimigo inimigo = iterInimigos.next() ;
+			
+			if (inimigo.paraRemover()) iterInimigos.remove() ;
+			else inimigo.verificaPosicao(submarino.getTiros(), submarino) ;
+		}
+	}
+	
+	@Override
+	public void dispose() {
+		batch.dispose() ;
 	}
 }
