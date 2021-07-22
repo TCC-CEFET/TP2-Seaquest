@@ -98,7 +98,7 @@ public class Jogo extends ApplicationAdapter {
 	
 	public void desenhaObjetos(SpriteBatch batch, float StateTime) {
 		batch.begin();
-		batch.draw(fundo.getImage(), 0, 0) ;
+		batch.draw(fundo.getImagem(), 0, 0) ;
 		
 		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
 		while (iterInimigos.hasNext()) {
@@ -118,13 +118,13 @@ public class Jogo extends ApplicationAdapter {
 	}
 	
 	public void movimentaObjetos() {
-		submarino.movimenta() ;
+		submarino.controla(stateTime) ;
 		
 		Iterator<Inimigo> iterInimigo = inimigos.iterator() ;
 		while (iterInimigo.hasNext()) {
 			Inimigo inimigo = iterInimigo.next() ;
 			
-			inimigo.movimenta() ;
+			inimigo.controla() ;
 			if (inimigo.paraRemover()) iterInimigo.remove() ;
 		}
 		

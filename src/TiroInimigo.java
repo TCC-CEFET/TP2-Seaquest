@@ -1,9 +1,14 @@
 
 public class TiroInimigo extends Tiro {
 	static private String caminhoImagem="sprites\\tiroInimigo.png";
-	public TiroInimigo(String caminhoImagem, String caminhoSom, int x, int y, int largura, int altura) {
-		super(caminhoImagem, caminhoSom, x, y, largura, altura);
-		// TODO Auto-generated constructor stub
+	static private int largura=48, altura=16 ;
+	static private int velocidade=Inimigo.getVelocidade()+100 ;
+	
+	public TiroInimigo(float x, float y, Direcao direcao) {
+		super(caminhoImagem, x, y, largura, altura, velocidade, direcao);
 	}
 	
+	public static int getLargura() {
+		return largura;
+	}
 }

@@ -1,4 +1,7 @@
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -7,27 +10,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Inimigo {
-	static private int pontos=20;
-	static private float velocidade=125 ; // px por s
-	static private int velocidadeVerticalTubarao = 25;
-	private float tempoOscilacaoTubarao = 0; 
+	static private int pontos=20 ;
+	static private int velocidade=125 ; // px por s
 	
-	protected String caminhoImagem ;
-	protected int largura, altura ;
-	protected int colunas, linhas ;
-	protected int larguraRealSheet, alturaRealSheet ;
-	protected float tempoEntreFrame ;
+	private int largura, altura ;
+	private int colunas, linhas ;
+	private int larguraRealSheet, alturaRealSheet ;
+	private float tempoEntreFrame ;
+	private String caminhoAudio ;
 	
 	protected Rectangle retangulo ;
 	protected Direcao direcao ;
 	
-	protected TextureRegion[] framesDireita ;
-	protected Animation animacaoDireita ;
-	protected TextureRegion[] framesEsquerda ;
-	protected Animation animacaoEsquerda ;
+	private TextureRegion[] framesDireita ;
+	private Animation animacaoDireita ;
+	private TextureRegion[] framesEsquerda ;
+	private Animation animacaoEsquerda ;
 	
-	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame) {
-		this.caminhoImagem = caminhoImagem ;
+	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio) {
+		this.caminhoAudio = caminhoAudio ;
 		this.largura = largura ; this.altura = altura ;
 		this.colunas = colunas ; this.linhas = linhas ;
 		larguraRealSheet=largura*colunas ; alturaRealSheet=altura*linhas ;
@@ -36,14 +37,18 @@ public class Inimigo {
 		
 		retangulo = new Rectangle(direcao.getXInicial(largura), linha == 4 ? Background.getAlturaLinha(linha)-25 : Background.getAlturaLinha(linha)-(altura/2), largura, altura) ;
 		
-		montaAnimacao() ;
+		montaAnimacao(caminhoImagem) ;
 	}
 	
-	static public float getVelocidade() {
+	static public int getVelocidade() {
 		return velocidade ;
 	}
 	
-	public void montaAnimacao() {
+	public Direcao getDirecao() {
+		return this.direcao ;
+	}
+	
+	public void montaAnimacao(String caminhoImagem) {
 		Texture imagem = new Texture(caminhoImagem) ;
 		
 		TextureRegion[][] matrizFrames = TextureRegion.split(imagem, larguraRealSheet/colunas, alturaRealSheet/linhas) ;
@@ -75,25 +80,9 @@ public class Inimigo {
 		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
 	}
 	
-	public void movimenta() {
-		
-		
-//		tempoOscilacaoTubarao += Gdx.graphics.getDeltaTime();
-//
-//		if (tempoOscilacaoTubarao >= 0.5) {
-//			tempoOscilacaoTubarao = 0;
-//			velocidadeVerticalTubarao *= -1;
-//		}
-//		if (altura == 16) {
-//			retangulo.y += velocidadeVerticalTubarao * Gdx.graphics.getDeltaTime() ;
-//			
-//			if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
-//			else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
-//		}
-//		else {
-			if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
-			else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
-//		}
+	public void controla() {
+		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
+		else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
 	}
 	
 	public boolean paraRemover() {
@@ -103,5 +92,39 @@ public class Inimigo {
 		return false ;
 	}
 	
+	public Rectangle getRetangulo() {
+		return this.retangulo ;
+	}
 	
+	public void setDirecao(Direcao direcao) {
+		this.direcao = direcao ;
+	}
+	
+	static public void aumentaPontos() {
+		if (pontos < 90) pontos += 10 ;
+	}
+	
+	static void aumentaVelocidade() {
+		velocidade += 10 ;
+	}
+	
+	public void some(Submarino submarino) {
+		submarino.aumentaPontuacao(Inimigo.pontos) ;
+		Gdx.audio.newSound(Gdx.files.internal(caminhoAudio)).play() ;
+	}
+	
+	public boolean verificaAcertado(ArrayList<TiroSubmarino> tiros, Submarino submarino) {
+		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
+		while (iterTiros.hasNext()) {
+			TiroSubmarino tiro = iterTiros.next() ;
+			
+			if (retangulo.overlaps(tiro.getRetangulo())) {
+				some(submarino) ;
+				iterTiros.remove() ;
+				return true ;
+			}
+		}
+		
+		return false ;
+	}
 }

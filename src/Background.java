@@ -12,7 +12,7 @@ public class Background {
 		this.imagem = new Texture(caminho);
 	}
 	
-	public Texture getImage() {
+	public Texture getImagem() {
 		return this.imagem;
 	}
 

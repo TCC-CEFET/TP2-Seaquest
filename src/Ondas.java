@@ -6,27 +6,38 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Ondas {
-	static private String caminhoImagem="sprites\\ondas_spritesheet.png";
-	static private int largura=Background.getLargura(), altura=16 ;
-	static private int colunas=1, linhas=1 ;
-	static private int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
-	static private int posY=356 ;
+	private int largura, altura ;
+	static private int posY ;
 	
-	static private TextureRegion[] frames ;
+	private TextureRegion[] frames ;
 	static private Animation animacao ;
 	
-	private Rectangle retangulo ;
+	private Rectangle retanguloBaixo ; // Parte de cima das ondas
+	private Rectangle retanguloCima ; // Parte de cima das ondas
 	
 	public Ondas() {
-		retangulo = new Rectangle(0, Ondas.posY, largura, altura) ;
+		largura = Background.getLargura() ;
+		altura = 16 ;
+		posY = 356 ;
+		
+		retanguloBaixo = new Rectangle(0, posY, largura, altura) ;
+		retanguloCima = new Rectangle(0, posY + altura, largura, altura) ;
 		this.montaAnimacao();
 	}
 	
 	static public int getPosY() {
-		return Ondas.posY ;
+		return posY ;
+	}
+	
+	public Rectangle getRetanguloCima() {
+		return this.retanguloCima ;
 	}
 	
 	public void montaAnimacao() {
+		String caminhoImagem="sprites\\ondas_spritesheet.png";
+		int colunas=1, linhas=1 ;
+		int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
+		
 		float tempoEntreFrame = 0.15f ;
 		
 		Texture imagem = new Texture(caminhoImagem) ;
@@ -46,6 +57,6 @@ public class Ondas {
 	public void anima(SpriteBatch batch, float stateTime) {
 		TextureRegion frameAtual = animacao.getKeyFrame(stateTime, true);
 				
-		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
+		batch.draw(frameAtual, retanguloBaixo.x, retanguloBaixo.y) ;
 	}
 }
