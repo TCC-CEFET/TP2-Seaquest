@@ -1,7 +1,4 @@
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
 
 public class TiroSubmarino extends Tiro {
 	static private String caminhoImagem="sprites\\tiroSubmarino.png";

@@ -33,7 +33,7 @@ public class Submarino {
 	private Animation animacaoExplosaoEsquerda ;
 	private Animation animacaoExplosaoDireita ;
 	private Texture imagemVida ;
-	private Texture imagemMergulhadorSalvo;
+	private Texture imagemMergulhadorSalvo ;
 	
 	private Rectangle retangulo ;
 	private int vidas ;
@@ -432,21 +432,17 @@ public class Submarino {
 		if (mergulhadoresSalvos > 0) mergulhadoresSalvos-- ;
 	}
 	
-	
 	public int getDesembarcou6() {
 		return this.desembarcou6 ;
 	}
-	
 	
 	public ArrayList<TiroSubmarino> getTiros() {
 		return tiros ;
 	}
 	
-	
 	public Rectangle getRetangulo() {
 		return retangulo ;
 	}
-	
 	
 	public boolean getExplodindo() {
 		return explodindo ;
@@ -458,5 +454,23 @@ public class Submarino {
 	
 	public boolean getMorreu() {
 		return morreu ;
+	}
+	
+	public void dispose() {
+		fundo.dispose() ;
+		imagemVida.dispose() ;
+		imagemMergulhadorSalvo.dispose() ;
+		
+		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
+		while (iterTiros.hasNext()) {
+			TiroSubmarino tiro = iterTiros.next() ;
+			tiro.dispose() ;
+		}
+		
+		Sound som = Gdx.audio.newSound(Gdx.files.internal("sounds\\lowOxygen.mp3")) ;
+		if (somPoucoO2EstaTocando) som.stop(idSomPoucoO2) ;
+		if (somEnchendoEstaTocando) som.stop(idSomEnchendo) ;
+		
+		som.dispose() ;
 	}
 }

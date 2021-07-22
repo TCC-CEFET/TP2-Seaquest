@@ -1,20 +1,13 @@
-import java.awt.font.ShapeGraphicAttribute;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
 
 public class Jogo extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -126,6 +119,8 @@ public class Jogo extends ApplicationAdapter {
 	}
 	
 	public void movimentaObjetos() {
+		if (Gdx.input.isKeyPressed(Keys.R)) resetaJogo() ;
+		
 		submarino.controla(stateTime) ;
 		
 		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
@@ -163,8 +158,28 @@ public class Jogo extends ApplicationAdapter {
 		}
 	}
 	
+	public void resetaJogo() {
+		dispose() ;
+		create() ;
+	}
+	
 	@Override
 	public void dispose() {
 		batch.dispose() ;
+		fundo.dispose() ;
+		
+		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
+		while (iterInimigos.hasNext()) {
+			Inimigo inimigo = iterInimigos.next() ;
+			inimigo.dispose() ;
+		}
+		
+		Iterator<Mergulhador> iterMergulhadores = mergulhadores.iterator() ;
+		while (iterMergulhadores.hasNext()) {
+			Mergulhador mergulhador = iterMergulhadores.next() ;
+			mergulhador.dispose() ;
+		}
+		
+		submarino.dispose() ;
 	}
 }

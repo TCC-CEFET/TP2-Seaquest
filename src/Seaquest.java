@@ -8,7 +8,6 @@ public class Seaquest {
 		int alturaTela = 480 ;
 		
 		System.setProperty("org.lwjgl.opengl.Display.allowSoftwareOpenGL", "true") ;
-		
 		new LwjglApplication(new Jogo(), "Seaquest", larguraTela, alturaTela, false) ;
 	}
 }

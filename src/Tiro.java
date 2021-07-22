@@ -1,9 +1,6 @@
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound ;
 import com.badlogic.gdx.graphics.Texture ;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle ;
 
 public class Tiro {
@@ -40,5 +37,10 @@ public class Tiro {
 	
 	public Rectangle getRetangulo() {
 		return retangulo;
+	}
+	
+	public void dispose() {
+		fundo.dispose() ;
+		imagem.dispose() ;
 	}
 }

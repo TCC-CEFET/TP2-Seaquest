@@ -137,4 +137,8 @@ public class Mergulhador {
 		velocidade = velocidadePadrao ; // Deixa na velocidade padrao
 		atualizaAnimacao() ;
 	}
+	
+	public void dispose() {
+		fundo.dispose() ;
+	}
 }

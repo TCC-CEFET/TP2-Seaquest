@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 public class SubmarinoInimigo extends Inimigo {
 	static private String caminhoSpriteSheet="sprites\\inimigo_spritesheet.png";
@@ -52,5 +50,11 @@ public class SubmarinoInimigo extends Inimigo {
 	@Override
 	public void some(Submarino submarino) {
 		super.some(submarino) ;
+	}
+	
+	@Override
+	public void dispose() {
+		super.dispose() ;
+		if (tiro != null) tiro.dispose() ;
 	}
 }

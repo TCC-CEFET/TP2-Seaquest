@@ -1,5 +1,4 @@
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
 
 public class Tubarao extends Inimigo {	
 	static private String caminhoSpriteSheet="sprites\\tubarao_spritesheet.png";

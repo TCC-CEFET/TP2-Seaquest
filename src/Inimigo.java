@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -29,7 +28,6 @@ public class Inimigo {
 	private Animation animacaoDireita ;
 	private TextureRegion[] framesEsquerda ;
 	private Animation animacaoEsquerda ;
-	
 	
 	public Inimigo(int linha, String caminhoImagem, int largura, int altura, int colunas, int linhas, float tempoEntreFrame, String caminhoAudio, Background fundo, Integer velocidade) {
 		this.caminhoAudio = caminhoAudio ;
@@ -137,5 +135,9 @@ public class Inimigo {
 	public void morre(Submarino submarino) {
 		retangulo.y = fundo.getAltura()*-1 ;
 		some(submarino) ;
+	}
+	
+	public void dispose() {
+		fundo.dispose() ;
 	}
 }

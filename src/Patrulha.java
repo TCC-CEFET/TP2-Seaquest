@@ -1,9 +1,3 @@
-
-import java.util.Random;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Rectangle;
-
 public class Patrulha extends Inimigo {
 	static private String caminhoSpriteSheet="sprites\\inimigo_spritesheet.png";
 	static private String caminhoAudio="sounds\\destroyEnemySub.mp3";
