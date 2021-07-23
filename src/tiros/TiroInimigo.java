@@ -5,10 +5,12 @@ import personagens.caracteristicas.*;
 import personagens.inimigos.*;
 
 public class TiroInimigo extends Tiro {
+	//variavei estaticas que guadam o caminho e as dimensoes da imagem do tiro, que sao sempre os mesmos
 	static private String caminhoImagem="sprites\\tiroInimigo.png";
 	static private int largura=48, altura=16 ;
 	
 	public TiroInimigo(float x, float y, Direcao direcao, Background fundo) {
+		//no campo de velocidade recebe-se a velocidade do inimigo para ser somada a do tiro
 		super(caminhoImagem, x, y, largura, altura, Inimigo.getVelocidadePadrao()+150, direcao, fundo);
 	}
 	
