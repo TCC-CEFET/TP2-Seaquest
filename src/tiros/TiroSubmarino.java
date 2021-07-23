@@ -6,7 +6,7 @@ import ambiente.*;
 import personagens.caracteristicas.*;
 
 public class TiroSubmarino extends Tiro {
-	//variaveis estaticas que guardam o caminho e as dimensoes da imagem do tiro, que nao mudam 
+	///variaveis estaticas que guardam o caminho e as dimensoes da imagem do tiro, que sao sempre os mesmos 
 	static private String caminhoImagem="sprites\\tiroSubmarino.png";
 	static private int largura=48, altura=4 ;
 	
