@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle ;
 
 import ambiente.*;
 import personagens.caracteristicas.*;
-
+//classe mae que tem as caracteristicas dos tiros
 public class Tiro {
 	private Background fundo ;
 	
