@@ -5,7 +5,7 @@ import personagens.caracteristicas.*;
 import personagens.inimigos.*;
 
 public class TiroInimigo extends Tiro {
-	//variavei estaticas que guadam o caminho e as dimensoes da imagem do tiro, que sao sempre os mesmos
+	//variaveis estaticas que guardam o caminho e as dimensoes da imagem do tiro, que sao sempre os mesmos
 	static private String caminhoImagem="sprites\\tiroInimigo.png";
 	static private int largura=48, altura=16 ;
 	
