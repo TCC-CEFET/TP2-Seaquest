@@ -3,17 +3,21 @@ package ambiente;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
+//classe que possui as caracteristicas do plano de fundo e da tela
 public class Background {
+	//caracteristicas do plano de fundo e da tela
 	private int largura, altura ;
 	private int limiteInferior ;
 	private int alturaLinhas ;
-	private int quantidadeLinhas ;
-	private Texture imagem ;
+	
+	private int quantidadeLinhas ; //quantidade de linhas em que aparecem os inimigos
+	
+	private Texture imagem ; //textura que guarda a imagem do background
 	
 	public Background() {
 		super();
 		
-		this.imagem = new Texture("sprites\\background.png") ;
+		this.imagem = new Texture("sprites\\background.png") ;//caminho da imagem do plano de fundo
 		
 		largura=800 ;
 		altura=480 ;
@@ -50,6 +54,7 @@ public class Background {
 		return quantidadeLinhas ;
 	}
 	
+	//metodo que determina se o objeto esta em tela
 	public boolean estaEmTela(Rectangle retangulo) {
 		if ((retangulo.x <= largura - retangulo.width) && (retangulo.x >= 0)) {
 			if ((retangulo.y <= altura - retangulo.height) && (retangulo.y >= 0)) {
@@ -59,6 +64,7 @@ public class Background {
 		return false ;
 	}
 	
+	//libera a imagem do background
 	public void dispose() {
 		imagem.dispose() ;
 	}
