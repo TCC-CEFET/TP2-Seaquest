@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import ambiente.*;
 import personagens.caracteristicas.*;
 
+//classe filha de Tiro que funciona como o tiro do submarino (player)
 public class TiroSubmarino extends Tiro {
 	///variaveis estaticas que guardam o caminho e as dimensoes da imagem do tiro, que sao sempre os mesmos 
 	static private String caminhoImagem="sprites\\tiroSubmarino.png";
