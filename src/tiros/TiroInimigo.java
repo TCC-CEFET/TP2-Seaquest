@@ -4,6 +4,7 @@ import ambiente.*;
 import personagens.caracteristicas.*;
 import personagens.inimigos.*;
 
+//classe que herda as caracteristicas de Tiro e funciona como o tiro do submarino inimigo
 public class TiroInimigo extends Tiro {
 	//variaveis estaticas que guardam o caminho e as dimensoes da imagem do tiro, que sao sempre os mesmos
 	static private String caminhoImagem="sprites\\tiroInimigo.png";
