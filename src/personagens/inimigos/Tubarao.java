@@ -1,4 +1,4 @@
-package mobs.inimigos;
+package personagens.inimigos;
 
 import com.badlogic.gdx.Gdx;
 
@@ -9,25 +9,23 @@ public class Tubarao extends Inimigo {
 	static private String caminhoAudio="sounds\\destroyShark.mp3";
 	static float tempoEntreFrame = 0.25f ;
 	static private int largura=48, altura=16 ;
-	static private int colunas=3, linhas=2 ;
-	static private int variacaoVertical = altura*2 ;
-	private float tempoOscilacao ; 
+	static private int variacaoVertical=altura*2 ;
+	static private float tempoOscilacaoVertical=1.2f ; 
 	
 	public Tubarao(int linha, Background fundo) {
-		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame, caminhoAudio, fundo, null) ;
-		tempoOscilacao = 1.2f ;
+		super(linha, caminhoSpriteSheet, largura, altura, tempoEntreFrame, caminhoAudio, fundo, null) ;
 	}
 	
 	@Override
 	public void controla(float stateTime) {
 		super.controla(stateTime) ;
 		
-		float oscilacaoAtual = stateTime%tempoOscilacao ;
-		if (oscilacaoAtual <= (tempoOscilacao/4)*1 && oscilacaoAtual > 0) {
+		float oscilacaoAtual = stateTime%tempoOscilacaoVertical ;
+		if (oscilacaoAtual <= (tempoOscilacaoVertical/4)*1 && oscilacaoAtual > 0) {
 			this.retangulo.y -= variacaoVertical * Gdx.graphics.getDeltaTime() ;
-		} else if (oscilacaoAtual <= (tempoOscilacao/4)*2) {
+		} else if (oscilacaoAtual <= (tempoOscilacaoVertical/4)*2) {
 			this.retangulo.y += variacaoVertical * Gdx.graphics.getDeltaTime() ;
-		} else if (oscilacaoAtual <= (tempoOscilacao/4)*3) {
+		} else if (oscilacaoAtual <= (tempoOscilacaoVertical/4)*3) {
 			this.retangulo.y += variacaoVertical * Gdx.graphics.getDeltaTime() ;
 		} else {
 			this.retangulo.y -= variacaoVertical * Gdx.graphics.getDeltaTime() ;

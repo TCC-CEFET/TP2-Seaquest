@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import mobs.inimigos.* ;
-import mobs.passivos.* ;
 import ambiente.*;
+import personagens.aliados.*;
+import personagens.inimigos.*;
 
 public class Jogo extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -58,14 +58,15 @@ public class Jogo extends ApplicationAdapter {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		
-		desenhaObjetos() ;
+		movimentaObjetos() ;
 		
 		verificaPosicoes() ;
 		
-		movimentaObjetos() ;
+		desenhaObjetos() ;
 	}
 	
 	public void criaObjetos(float stateTime) {
+		// Apaga os objetos caso o jogador esteja morto e para de criar novos ate renascer
 		if (submarino.getMorreu()) {
 			inimigos.clear() ;
 			mergulhadores.clear() ;
@@ -144,7 +145,7 @@ public class Jogo extends ApplicationAdapter {
 	}
 	
 	public void verificaPosicoes() {
-		submarino.verificaPosicao(inimigos, mergulhadores) ;
+		submarino.verificaPosicao(inimigos, mergulhadores, ondas) ;
 		
 		Iterator<Mergulhador> iterMergulhadores = mergulhadores.iterator() ;
 		while (iterMergulhadores.hasNext()) {

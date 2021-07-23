@@ -1,13 +1,13 @@
-package mobs.inimigos;
+package personagens.inimigos;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import mobs.caracteristicas.* ;
-import mobs.inimigos.* ;
-import mobs.passivos.* ;
 import ambiente.*;
+import personagens.aliados.*;
+import personagens.caracteristicas.*;
+import personagens.inimigos.*;
 import rodar.*;
 import tiros.*;
 
@@ -16,12 +16,11 @@ public class SubmarinoInimigo extends Inimigo {
 	static private String caminhoAudio="sounds\\destroyEnemySub.mp3";
 	static float tempoEntreFrame = 0.08f ;
 	static private int largura=48, altura=30 ;
-	static private int colunas=3, linhas=2 ;
 	
 	private TiroInimigo tiro ;
 	
 	public SubmarinoInimigo(int linha, Background fundo) {
-		super(linha, caminhoSpriteSheet, largura, altura, colunas, linhas, tempoEntreFrame, caminhoAudio, fundo, null) ;
+		super(linha, caminhoSpriteSheet, largura, altura, tempoEntreFrame, caminhoAudio, fundo, null) ;
 	}
 	
 	@Override
@@ -54,11 +53,6 @@ public class SubmarinoInimigo extends Inimigo {
 		}
 		
 		super.verificaPosicao(tiros, submarino) ;
-	}
-	
-	@Override
-	public void some(Submarino submarino) {
-		super.some(submarino) ;
 	}
 	
 	@Override

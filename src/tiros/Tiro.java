@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Texture ;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle ;
 
-import mobs.caracteristicas.* ;
 import ambiente.*;
+import personagens.caracteristicas.*;
 
 public class Tiro {
 	private Background fundo ;

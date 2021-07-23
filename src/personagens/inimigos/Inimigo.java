@@ -1,4 +1,4 @@
-package mobs.passivos;
+package personagens.inimigos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,45 +10,54 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-import mobs.caracteristicas.* ;
-import mobs.inimigos.* ;
 import ambiente.*;
+import personagens.aliados.*;
+import personagens.caracteristicas.*;
+import tiros.*;
 
-public class Mergulhador {
-	private Background fundo ;
+public class Inimigo {
+	protected Background fundo ;
 	
-	static private int pontos=50;
-	static private float velocidadePadrao=75;
-	static float tempoEntreFramePadrao=0.15f ;
+	static private int pontos=20 ;
+	static private int velocidadePadrao=125 ;
 	
-	static private int largura=52, altura=56 ;	
+	protected int velocidade ; // px por s
+	private int largura, altura ;
+	private float tempoEntreFrame ;
+	private String caminhoAudio ;
 	
-	static private TextureRegion[] framesDireita ;
+	protected Rectangle retangulo ;
+	protected Direcao direcao ;
+	
+	private TextureRegion[] framesDireita ;
 	private Animation animacaoDireita ;
-	static private TextureRegion[] framesEsquerda ;
+	private TextureRegion[] framesEsquerda ;
 	private Animation animacaoEsquerda ;
 	
-	private Rectangle retangulo ;
-	private Direcao direcao ;
-	private float velocidade ;
-	private float tempoEntreFrame ;
-	private boolean animacaoNormal ;
-	
-	public Mergulhador(int linha, Background fundo) {
+	public Inimigo(int linha, String caminhoImagem, int largura, int altura, float tempoEntreFrame, String caminhoAudio, Background fundo, Integer velocidade) {
+		this.caminhoAudio = caminhoAudio ;
+		this.largura = largura ; this.altura = altura ;
+		this.tempoEntreFrame = tempoEntreFrame ;
 		this.direcao = Direcao.getDirecaoAleatoria() ;
-		retangulo = new Rectangle(direcao.getXInicial(largura, fundo), fundo.getAlturaLinha(linha)-(altura/2), largura, altura) ;
-		velocidade = velocidadePadrao ;
-		animacaoNormal = true ;
+		if (velocidade != null) this.velocidade = velocidade ;
+		else this.velocidade = velocidadePadrao ;
+		
+		retangulo = new Rectangle(direcao.getXInicial(largura, fundo), linha == 4 ? fundo.getAlturaLinha(linha)-25 : fundo.getAlturaLinha(linha)-(altura/2), largura, altura) ;
+		
+		montaAnimacao(caminhoImagem) ;
 		
 		this.fundo = fundo ;
-		
-		tempoEntreFrame = tempoEntreFramePadrao ;
-		
-		montaAnimacao() ;
 	}
 	
-	public void montaAnimacao() {
-		String caminhoImagem="sprites\\mergulhador_spritesheet.png" ;
+	static public int getVelocidadePadrao() {
+		return velocidadePadrao ;
+	}
+	
+	public Direcao getDirecao() {
+		return this.direcao ;
+	}
+	
+	public void montaAnimacao(String caminhoImagem) {
 		int colunas=3, linhas=2 ;
 		int larguraRealSheet=largura*colunas, alturaRealSheet=altura*linhas ;
 		
@@ -69,11 +78,7 @@ public class Mergulhador {
 		}
 		framesEsquerda[i] = matrizFrames[1][1] ;
 		
-		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
-		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
-	}
-	
-	public void atualizaAnimacao() {
+		
 		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
 	}
@@ -87,7 +92,7 @@ public class Mergulhador {
 		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
 	}
 	
-	public void movimenta() {
+	public void controla(float stateTime) {
 		if (direcao == Direcao.DIREITA) retangulo.x += velocidade * Gdx.graphics.getDeltaTime() ;
 		else retangulo.x -= velocidade * Gdx.graphics.getDeltaTime() ;
 	}
@@ -99,48 +104,38 @@ public class Mergulhador {
 		return false ;
 	}
 	
-	public static int getLargura() {
-		return Mergulhador.largura;
-	}
-	
 	public Rectangle getRetangulo() {
 		return this.retangulo ;
 	}
 	
-	static public int getPontos() {
-		return pontos ;
+	public void setDirecao(Direcao direcao) {
+		this.direcao = direcao ;
 	}
 	
 	static public void aumentaPontos() {
-		if (pontos < 1000) pontos += 50 ;
+		if (pontos < 90) pontos += 10 ;
 	}
 	
-	public void some() {
-		Gdx.audio.newSound(Gdx.files.internal("sounds\\rescueDiver.mp3")).play() ;
+	public static void aumentaVelocidadePadrao() {
+		velocidadePadrao += 10 ;
 	}
 	
-	public void verificaPosicao(ArrayList<Inimigo> inimigos) {
-		// Verifica os inimigos para aumentar velocidade
-		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
-		while (iterInimigos.hasNext()) {
-			Inimigo inimigo = iterInimigos.next() ;
+	public void verificaPosicao(ArrayList<TiroSubmarino> tiros, Submarino submarino) {
+		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
+		while (iterTiros.hasNext()) {
+			TiroSubmarino tiro = iterTiros.next() ;
 			
-			if (retangulo.overlaps(inimigo.getRetangulo())) {
-				if (animacaoNormal) {
-					animacaoNormal = false ;
-					velocidade = Inimigo.getVelocidadePadrao() ;
-					direcao = inimigo.getDirecao() ;
-					tempoEntreFrame = 0.07f ;
-					atualizaAnimacao() ;
-				}
-				return ;
+			if (retangulo.overlaps(tiro.getRetangulo())) {
+				iterTiros.remove() ;
+				this.some(submarino) ;
 			}
 		}
-		
-		animacaoNormal = true ;
-		tempoEntreFrame = tempoEntreFramePadrao ;
-		velocidade = velocidadePadrao ; // Deixa na velocidade padrao
-		atualizaAnimacao() ;
+	}
+	
+	public void some(Submarino submarino) {
+		retangulo.y = fundo.getAltura()*-1 ;
+		submarino.aumentaPontuacao(Inimigo.pontos) ;
+		Gdx.audio.newSound(Gdx.files.internal(caminhoAudio)).play() ;
 	}
 	
 	public void dispose() {

@@ -1,9 +1,9 @@
-package mobs.caracteristicas;
+package personagens.caracteristicas ;
 
 import java.util.Random;
 
 import ambiente.*;
-import mobs.passivos.*;
+import personagens.aliados.*;
 
 public enum Direcao {
 	ESQUERDA, DIREITA ;
