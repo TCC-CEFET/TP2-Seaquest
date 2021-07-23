@@ -24,6 +24,7 @@ import personagens.inimigos.*;
 import rodar.*;
 import tiros.*;
 
+// Classe submarino que é controlado pelo jogador
 public class Submarino {
 	private Background fundo ;
 	private Ondas ondas ;
@@ -34,15 +35,15 @@ public class Submarino {
 	private int larguraVida=48, alturaVida=18 ;
 	private int larguraMergulhadorSalvo=39, alturaMergulhadorSalvo=28 ;
 	
-	// Texturas prontas
+	// Animacoes e texturas
 	private Animation animacaoDireita ;	
 	private Animation animacaoEsquerda ;
-	
 	private Animation animacaoExplosaoEsquerda ;
 	private Animation animacaoExplosaoDireita ;
 	private Texture imagemVida ;
 	private Texture imagemMergulhadorSalvo ;
 	
+	// Prorpiedades do submarino
 	private Rectangle retangulo ;
 	private int vidas ;
 	private int mergulhadoresSalvos ;
@@ -52,8 +53,10 @@ public class Submarino {
 	
 	private int maximoTanqueO2 = 35 ;
 	
+	// Tiros
 	private ArrayList<TiroSubmarino> tiros ;
 	
+	// Variaveis de marcacao
 	private boolean jaDesembarcou ;
 	private int desembarcou6 ;
 	
@@ -71,7 +74,6 @@ public class Submarino {
 	private boolean explodindo ;
 	private Float tempoInicialExplosao ;
 	private boolean morreu ;
-	
 	
 	public Submarino(Background fundo, Ondas ondas) {
 		this.fundo = fundo ;
@@ -103,6 +105,7 @@ public class Submarino {
 		this.montaAnimacao() ;
 	}
 	
+	// Monta as animacoes a partir do sprite sheet
 	public void montaAnimacao() {
 		String caminhoImagem="sprites\\submarino_spritesheet.png";
 		int colunas=5, linhas=3 ;
@@ -112,16 +115,20 @@ public class Submarino {
 		String caminhoImagemVida="sprites\\vida.png";
 		String caminhoImagemMergulhadorSalvo="sprites\\mergulhadorSalvo.png" ;
 		
+		// Pega a imagem de vida
 		imagemVida = new Texture(caminhoImagemVida) ;
 		imagemMergulhadorSalvo = new Texture(caminhoImagemMergulhadorSalvo) ;
 		
 		float tempoEntreFrame = 0.08f ;
 		float tempoEntreFrameExplosao = 0.15f ;
 		
+		// Pega o sprite sheet
 		Texture imagem = new Texture(caminhoImagem) ;
 		
+		// Monta uma matriz de regiao
 		TextureRegion[][] matrizFrames = TextureRegion.split(imagem, larguraRealSheet/colunas, alturaRealSheet/linhas) ;
-
+		
+		// Monta a ordem de texturas para direita
 		TextureRegion[] framesDireita = new TextureRegion[colunasNormal+1] ;
 		int i ;
 		for (i=0; i < colunasNormal; i++) {
@@ -129,15 +136,18 @@ public class Submarino {
 		}
 		framesDireita[i] = matrizFrames[0][1] ;
 		
+		// Monta a ordem de texturas para esquerda
 		TextureRegion[] framesEsquerda = new TextureRegion[colunasNormal+1];
 		for (i=0; i < colunasNormal; i++) {
 			framesEsquerda[i] = matrizFrames[1][i];
 		}
 		framesEsquerda[i] = matrizFrames[1][1] ;
 		
+		// Monta as animacoes
 		animacaoDireita = new Animation(tempoEntreFrame, framesDireita) ;
 		animacaoEsquerda = new Animation(tempoEntreFrame, framesEsquerda) ;
 		
+		// Monta a ordem de texturas para explosao direita
 		int quantidadeFramesExplosao = 10 ;
 		TextureRegion[] framesExplosaoDireita = new TextureRegion[quantidadeFramesExplosao] ;
 		for (i=0; i < 4; i+=2) {
@@ -150,6 +160,7 @@ public class Submarino {
 			framesExplosaoDireita[i+2] = matrizFrames[2][2];
 		}
 		
+		// Monta a ordem de texturas para explosao esquerda
 		TextureRegion[] framesExplosaoEsquerda = new TextureRegion[quantidadeFramesExplosao] ;
 		for (i=0; i < 4; i+=2) {
 			framesExplosaoEsquerda[i] = matrizFrames[1][3];
@@ -161,15 +172,18 @@ public class Submarino {
 			framesExplosaoEsquerda[i+2] = matrizFrames[2][2];
 		}
 		
+		// Monta as animacoes explosao
 		animacaoExplosaoDireita = new Animation(tempoEntreFrameExplosao, framesExplosaoDireita) ;
 		animacaoExplosaoEsquerda = new Animation(tempoEntreFrameExplosao, framesExplosaoEsquerda) ;
 	}
 	
+	// Coloca os itens em tela
 	public void anima(SpriteBatch batch, float stateTime, OrthographicCamera camera) {
 		// Anima o submarino
 		TextureRegion frameAtual = null ;
-		
 		float tempoExplosao=1.5f ;
+		
+		// Verifica o estado
 		if (explodindo) {
 			if (tempoInicialExplosao == null) {
 				tempoInicialExplosao = stateTime ;
@@ -185,10 +199,10 @@ public class Submarino {
 			if (direcao == Direcao.DIREITA) frameAtual = animacaoDireita.getKeyFrame(stateTime, true);
 			else frameAtual = animacaoEsquerda.getKeyFrame(stateTime, true);
 		}
-				
+		
 		batch.draw(frameAtual, retangulo.x, retangulo.y) ;
 		
-		// desenha os tiros
+		// Desenha os tiros
 		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
 		while (iterTiros.hasNext()) {
 			TiroSubmarino tiro = iterTiros.next() ;
@@ -222,7 +236,7 @@ public class Submarino {
 		// Desenha os mergulhadores salvos
 		int xMergulhadorSalvo=220, yMergulhadorSalvo=2 ;
 		for (int i=0; i < mergulhadoresSalvos; i++){
-			if (mergulhadoresSalvos >= 6) {
+			if (mergulhadoresSalvos >= 6) { // Faz piscar quando tiver 6 mergulhadores
 				float tempoPiscar=0.3f ;
 				if (stateTime >= ultimoDesenho+tempoPiscar && stateTime <= ultimoDesenho+(tempoPiscar*2)) {
 					batch.draw(imagemMergulhadorSalvo, xMergulhadorSalvo+(i*(larguraMergulhadorSalvo*1.2f)), yMergulhadorSalvo) ;
@@ -235,8 +249,9 @@ public class Submarino {
 		}
 	}
 	
+	// Verifica as posicoes
 	public void verificaPosicao(ArrayList<Inimigo> inimigos, ArrayList<Mergulhador> mergulhadores, Ondas ondas) {
-		if (explodindo || morreu) return ;
+		if (explodindo || morreu) return ; // Sai se nao for para fazer a verificacao
 		
 		// Verifica os inimigos
 		Iterator<Inimigo> iterInimigos = inimigos.iterator() ;
@@ -270,7 +285,7 @@ public class Submarino {
 		if (retangulo.y < fundo.getLimiteInferior()) retangulo.y = fundo.getLimiteInferior();
 		else if(retangulo.y > ondas.getPosY()) retangulo.y = ondas.getPosY();
 		
-		if (explodindo) return ;
+		if (explodindo) return ; // Verifica se deve parar execucao
 		// Verifica se ta no topo
 		if (this.retangulo.y >= ondas.getPosY()) {
 			desembarca() ;
@@ -282,6 +297,7 @@ public class Submarino {
 		}
 	}
 	
+	// Recebe os inputs do usuario e realiza as funcoes de movimento
 	public void controla(float stateTime) {
 		// Movimenta os tiros
 		Iterator<TiroSubmarino> iterTiros = tiros.iterator() ;
@@ -289,31 +305,32 @@ public class Submarino {
 			TiroSubmarino tiro = iterTiros.next() ;
 			tiro.movimenta() ;
 		}
-		
+
 		// Sai se nao puder movimentar
 		if (vidas <= 0 || estaEnchendo || explodindo) {
 			return ;
 		}
-		
-		// Controla os movimentos
+
+		// Controla os movimentos por tecla
 		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 			direcao = Direcao.ESQUERDA ;
 			retangulo.x -= velocidadeX * Gdx.graphics.getDeltaTime();
 		}
-	    if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-	    	direcao = Direcao.DIREITA ;
-	    	retangulo.x += velocidadeX * Gdx.graphics.getDeltaTime();
-	    }
-	    if (Gdx.input.isKeyPressed(Keys.DOWN)) retangulo.y -= velocidadeY * Gdx.graphics.getDeltaTime();
-	    if (Gdx.input.isKeyPressed(Keys.UP)) retangulo.y += velocidadeY * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			direcao = Direcao.DIREITA ;
+			retangulo.x += velocidadeX * Gdx.graphics.getDeltaTime();
+		}
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) retangulo.y -= velocidadeY * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Keys.UP)) retangulo.y += velocidadeY * Gdx.graphics.getDeltaTime();
 	    
-	    // Controla o tiro
-	    if (Gdx.input.isKeyPressed(Keys.SPACE) && retangulo.y < ondas.getPosY() && stateTime >= ultimoTiro+0.3) {
-	    	tiros.add(new TiroSubmarino(direcao == Direcao.DIREITA ? retangulo.x+largura : retangulo.x-TiroSubmarino.getLargura(), retangulo.y+(altura/2), direcao, fundo)) ;
-	    	ultimoTiro = stateTime ;
-	    }
+		// Controla o tiro
+		if (Gdx.input.isKeyPressed(Keys.SPACE) && retangulo.y < ondas.getPosY() && stateTime >= ultimoTiro+0.3) {
+			tiros.add(new TiroSubmarino(direcao == Direcao.DIREITA ? retangulo.x+largura : retangulo.x-TiroSubmarino.getLargura(), retangulo.y+(altura/2), direcao, fundo)) ;
+			ultimoTiro = stateTime ;
+		}
 	}
 	
+	// Resgata o mergulhador se tiver espaco
 	public boolean salvaMergulhador() {
 		if (mergulhadoresSalvos >= 6) return false ;
 		
@@ -321,18 +338,20 @@ public class Submarino {
 		return true ;
 	}
 	
+	// Verifica o desembarque quando subir
 	public void desembarca() {
 		if (jaDesembarcou) return ; // Se ja fez o desembarque uma vez, nao faz mais ate mergulhar novamente
 		
-		// Verifica quantos mergulhadores estão quando sobe
+		// Verifica quantos mergulhadores estao quando sobe
 		if (mergulhadoresSalvos == 6 || estaDesembarcando) {
+			// Executa o caso para 6 mergulhadores ate terminar todos
 			estaDesembarcando = true ;
 			
-			if (levelO2 >= 1) {
-				levelO2 -= maximoTanqueO2/4 ;
-				Gdx.audio.newSound(Gdx.files.internal("sounds\\dropOxygen.mp3")).play() ;
-				aumentaPontuacao((int) levelO2/4*40) ;
-				try { TimeUnit.MILLISECONDS.sleep(500) ; }
+			if (levelO2 > 0) { // Ate o O2 acabar
+				levelO2 -= maximoTanqueO2/4 ; // Diminui 1/4 do tanque
+				Gdx.audio.newSound(Gdx.files.internal("sounds\\dropOxygen.mp3")).play() ; // Toca o som de esvaziar para pegar money
+				aumentaPontuacao((int) levelO2/4*40) ; // Aumenta parte da pontuacao
+				try { TimeUnit.MILLISECONDS.sleep(500) ; } // Pausa por 0,5s para tocar o som
 				catch (InterruptedException e) { e.printStackTrace(); }
 				if (levelO2 < 0) levelO2 = 0 ;
 				return ;
@@ -341,7 +360,7 @@ public class Submarino {
 			mergulhadoresSalvos -= 1 ;
 			aumentaPontuacao(Mergulhador.getPontos()) ;
 			
-			Gdx.audio.newSound(Gdx.files.internal("sounds\\deliverDiver.mp3")).play() ;
+			Gdx.audio.newSound(Gdx.files.internal("sounds\\deliverDiver.mp3")).play() ; // Toca o som
 			
 			try { TimeUnit.MILLISECONDS.sleep(300) ; }
 			catch (InterruptedException e) { e.printStackTrace(); }
@@ -354,16 +373,19 @@ public class Submarino {
 				Inimigo.aumentaVelocidadePadrao();
 			}
 		} else if (mergulhadoresSalvos == 0) {
+			// Executa o caso para 0 mergulhadores
 			some() ;
 			jaDesembarcou = true ;
 			Inimigo.aumentaVelocidadePadrao();
 		} else {
+			// Executa o caso para 1-5 mergulhadores
 			mergulhadoresSalvos-- ;
 			jaDesembarcou = true ;
 			Inimigo.aumentaVelocidadePadrao();
 		}
 	}
-
+	
+	// Diminui o levle de O2 caso emrgulhado
 	public void diminuiLevelO2() {
 		Sound somPoucoO2 = Gdx.audio.newSound(Gdx.files.internal("sounds\\lowOxygen.mp3")) ;
 		jaDesembarcou = false ; // Volta para nao ter desebarcado quando afundar
@@ -387,6 +409,7 @@ public class Submarino {
 		if (vidas > 0) levelO2 -= Gdx.graphics.getDeltaTime() ; // Decrmeta O2 do tanque
 	}
 	
+	// Enche o tanque de O2 caso nao mergulhado
 	public void aumentaLevelO2() {
 		Sound somEnchendo = Gdx.audio.newSound(Gdx.files.internal("sounds\\refitOxygen.mp3")) ;
 		
@@ -416,6 +439,7 @@ public class Submarino {
 	public void aumentaPontuacao(int pontos) {
 		pontuacao += pontos ;
 		
+		// Da mais vida caso passe de 10 mil pontos
 		if (pontuacao >= 10000*(vidasExtrasAdiquiridas+1)) {
 			aumentaVidas() ;
 			vidasExtrasAdiquiridas++ ;
@@ -426,6 +450,7 @@ public class Submarino {
 		if (vidas < 7) vidas++ ;
 	}
 	
+	// Aconada quando o submarino morre
 	public void some() {
 		if (explodindo || vidas <= 0) return ;
 		morreu = true ;
@@ -437,6 +462,7 @@ public class Submarino {
 		if (mergulhadoresSalvos > 0) mergulhadoresSalvos-- ;
 	}
 	
+	// Nasce novamente o submarino
 	public void respawna() {
 		morreu = false ;
 		
