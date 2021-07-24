@@ -279,11 +279,13 @@ public class Submarino {
 		}
 		
 		// Verifica se nao saiu de tela
-		if (retangulo.x < 0) retangulo.x = 0;
-		else if(retangulo.x > fundo.getLargura()-largura) retangulo.x = fundo.getLargura()-largura;
-		    
-		if (retangulo.y < fundo.getLimiteInferior()) retangulo.y = fundo.getLimiteInferior();
-		else if(retangulo.y > ondas.getPosY()) retangulo.y = ondas.getPosY();
+		if (vidas > 0) {
+			if (retangulo.x < 0) retangulo.x = 0;
+			else if(retangulo.x > fundo.getLargura()-largura) retangulo.x = fundo.getLargura()-largura;
+			    
+			if (retangulo.y < fundo.getLimiteInferior()) retangulo.y = fundo.getLimiteInferior();
+			else if(retangulo.y > ondas.getPosY()) retangulo.y = ondas.getPosY();
+		}
 		
 		if (explodindo) return ; // Verifica se deve parar execucao
 		// Verifica se ta no topo
@@ -467,7 +469,7 @@ public class Submarino {
 		morreu = false ;
 		
 		if (vidas <= 0) {
-			retangulo.setX(fundo.getLargura()) ;
+			retangulo.setY(fundo.getAltura()*-3) ;
 			return ;
 		}
 		
