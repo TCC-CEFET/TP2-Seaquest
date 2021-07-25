@@ -6,10 +6,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+// Classe das ondas da "superficie"
 public class Ondas {
+	// Variaveis de posicao
 	private int largura, altura ;
 	private int posY ;
 	
+	// Textura
 	private TextureRegion[] frames ;
 	private Animation animacao ;
 	
@@ -34,6 +37,7 @@ public class Ondas {
 		return this.retanguloCima ;
 	}
 	
+	// Monta a animacao
 	public void montaAnimacao() {
 		String caminhoImagem="sprites\\ondas_spritesheet.png";
 		int colunas=1, linhas=1 ;
@@ -55,6 +59,7 @@ public class Ondas {
 		animacao = new Animation(tempoEntreFrame, frames) ;
 	}
 	
+	// Coloca a imagem no local
 	public void anima(SpriteBatch batch, float stateTime) {
 		TextureRegion frameAtual = animacao.getKeyFrame(stateTime, true);
 				
