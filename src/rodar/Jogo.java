@@ -15,6 +15,7 @@ import ambiente.*;
 import personagens.aliados.*;
 import personagens.inimigos.*;
 
+// Classe que controla os elementos do jogo
 public class Jogo extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -173,7 +174,7 @@ public class Jogo extends ApplicationAdapter {
 		create() ;//chama a função create novamente assim reiniciando o jogo
 	}
 	
-	//função para liberar todos os objetos
+	//função para liberar os objetos
 	@Override
 	public void dispose() {
 		batch.dispose() ;
