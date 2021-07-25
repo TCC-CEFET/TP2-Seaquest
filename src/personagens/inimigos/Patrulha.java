@@ -2,7 +2,9 @@ package personagens.inimigos;
 
 import ambiente.*;
 
+// Classe para patrulha inimiga que passa na superficie
 public class Patrulha extends Inimigo {
+	// Caracteristicas de todas as patrulhas
 	static private String caminhoSpriteSheet="sprites\\inimigo_spritesheet.png";
 	static private String caminhoAudio="sounds\\destroyEnemySub.mp3";
 	static float tempoEntreFrame = 0.08f ;
