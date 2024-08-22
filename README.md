@@ -1,9 +1,9 @@
 # SEAQUEST
 
 <p align="center">
-  <img src="imgs/shoot.png" alt="Shoot" width="25%"/>
-  <img src="imgs/seaquest_2021.png" alt="Seaquest 2021" width="25%"/>
-  <img src="imgs/seaquest_1983.png" alt="Seaquest 1983" width="25%"/>
+  <img src="imgs/shoot.png" alt="Shoot" width="40%"/>
+  <img src="imgs/seaquest_2021.png" alt="Seaquest 2021" width="40%"/>
+  <img src="imgs/seaquest_1983.png" alt="Seaquest 1983" width="30%"/>
 </p>
 
 ---
